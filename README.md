@@ -1,3 +1,3 @@
 f
 
-theme: time machine
+theme: minima
