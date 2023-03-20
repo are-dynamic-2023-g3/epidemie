@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import numpy as np
 import tkinter as Tk
 from matplotlib import pyplot as plt
@@ -220,10 +219,9 @@ def generate_random_world_SEIR():
 #print(generate_random_world_SEIR())
 
 
-'''
-def deplacement_world_SEIR()
-'''
-
+"""
+def deplacement_world_SEIR(world,x,y)
+"""
 
 def distance(world,x,y):
     '''
@@ -242,6 +240,81 @@ def distance(world,x,y):
     
     return liste_coordonnees
 
+
+def zero_voisin(world,x,y):
+    '''
+    
+    Verifie s'il existe un espace vide autour d'un individu 
+    point (x,y) dans le monde "world", en excluant les emplacements vides
+
+    '''
+    
+    for j in range(10):
+        for i in range(10):
+            
+            if(np.maximum(np.abs(i-x),np.abs(j-y)) == 1 and (i,j) != (x,y) and world[j][i]==0):
+                return True
+    return False
+
+
+    
+def coordonnees_zero(world):
+    '''
+    
+    Renvoie la liste des coordonnees des espaces vide du monde 'world'
+    
+    '''
+    
+    liste_coordonnees = []
+    
+    for j in range(len(world)):
+        for i in range(len(world)):
+            
+            if world[j][i]==0:
+                liste_coordonnees.append((i,j))
+    
+    return liste_coordonnees
+
+
+
+def deplacement_world_SEIR(world,x,y):
+    '''
+    
+    Permet le deplacement des individus situes au bord d'un regroupement
+    
+    '''
+    
+    places_pour_se_deplacer = coordonnees_zero(world)
+    
+    
+
+    if zero_voisin(world, x, y)==True:
+        
+        indice_coordonnees = np.random.randint(0,len(places_pour_se_deplacer))
+        
+        new_coordonnees=places_pour_se_deplacer[indice_coordonnees]
+        
+        i = new_coordonnees[0]
+        
+        j = new_coordonnees[1]
+        
+        if np.maximum(np.abs(i-x),np.abs(j-y)) == 1 and (i,j) != (x,y):
+        
+           
+            tmp=world[y][x]
+            
+            world[j][i]=tmp
+            
+            world[y][x]=0
+
+            return world
+        
+        else:
+            
+            return deplacement_world_SEIR(world,x,y)
+        
+        
+                
 
 
 
@@ -300,7 +373,7 @@ def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_retire)
                                 world[y][x]=4 # L'individu est guérri ou mort (R)
     
     return world
-                    
+                
                 
         
 def affiche_monde(world:list):
