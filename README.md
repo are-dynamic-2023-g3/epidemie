@@ -4,7 +4,7 @@ Pendant la prémière séance, nous avons discuté sur plusieurs sujets qui nous
 
 ## Deuxième semaine 13/02 --> 19/02
 Pendant la deuxième séance, nous étions à la B.U recherchant des documentations, plus précisement des recherches faites sur le sujet, des livres écritent.
-On a alors trouvé des différentes manières de développer et d'appliquer certains figures, notamment des équations différentiels tel que:
+On a alors trouvé des différentes manières de développer et d'appliquer certains formules, notamment des équations différentiels tel que:
 
 
 theme: minima
