@@ -7,6 +7,5 @@ Pendant la deuxième séance, nous étions à la B.U recherchant des documentati
 On a alors trouvé des différentes manières de développer et d'appliquer certains formules, notamment des équations différentiels tels que: 
 
 ![](https://www.mmnp-journal.org/articles/mmnp/full_html/2020/01/mmnp200124/mmnp200124-eq2.png)
-
-
-theme: minima
+ 
+## Troisième semaine 20/02 --> 
