@@ -4,11 +4,17 @@ import tkinter as Tk
 from matplotlib import pyplot as plt
 
 
+
+'''
+POUR L'INTERFACE GRAPHIQUE IL FAUT EXECUTER tkinter_projet.py
+'''
+
+
 '''
 α = alpha (taux d'incubation)
 β = beta (taux de transmission)
 γ = gamma (taux de guérison)
-μ = mu (taux de mortailté)
+μ = mu (taux de mortalité)
 
 S = personnes saines (taux entre 0 et 1)
 E = personnes infectées non infectieuses (taux entre 0 et 1)
@@ -128,7 +134,26 @@ def show_plot_SEIR(S:float, E:float, I:float, R:float,alpha,beta,gamma,mu,nb_tem
         
 #show_plot_SEIR(S,E,I,R,alpha,beta,gamma,mu,nb_temps,population)   
         
-        
+
+
+
+
+
+
+
+
+
+
+def affiche_monde(world:list):
+    
+    '''
+    Affiche un tableau python de type list de facon plus propre et lisible
+    '''
+    
+    print(np.array(world))         
+
+
+
 
 def generate_world_SEIR(nb_S:int, nb_E:int, nb_I:int, nb_R:int):
     '''
@@ -177,6 +202,7 @@ def generate_world_SEIR(nb_S:int, nb_E:int, nb_I:int, nb_R:int):
                 
                     if (nb_S!=0 or nb_E!=0 or nb_I!=0 or nb_R!=0):
                         
+                        
                         type_individu=np.random.randint(1,5) # 5 exclu
                         
                         while (nombre_individus[type_individu-1]==0):
@@ -187,13 +213,14 @@ def generate_world_SEIR(nb_S:int, nb_E:int, nb_I:int, nb_R:int):
                         if (proba<=probas_individus[type_individu-1]):
                             world[y][x]=type_individu
                             nombre_individus[type_individu-1]=nombre_individus[type_individu-1]-1
-        
-        
-                    if (nb_S==0 and nb_E==0 and nb_I==0 and nb_R==0):
-                        boucler=False
-                    
-    
+                
+                
+                if (nb_S==0 and nb_E==0 and nb_I==0 and nb_R==0):
+                    boucler=False
+
     return world
+
+
 
 
 def generate_random_world_SEIR():
@@ -205,9 +232,9 @@ def generate_random_world_SEIR():
     
     '''
     
-    nb_espaces_vide=np.random.randint(0,69)
+    nb_espaces_vide=np.random.randint(0,59)
     
-    nb_S=np.random.randint(30,100-nb_espaces_vide)
+    nb_S=np.random.randint(40,100-nb_espaces_vide)
     nb_E=np.random.randint(0,100-(nb_S+nb_espaces_vide))
     nb_I=100-(nb_espaces_vide+nb_S+nb_E)
     
@@ -219,9 +246,7 @@ def generate_random_world_SEIR():
 #print(generate_random_world_SEIR())
 
 
-"""
-def deplacement_world_SEIR(world,x,y)
-"""
+
 
 def distance(world,x,y):
     '''
@@ -277,6 +302,8 @@ def coordonnees_zero(world):
 
 
 
+
+
 def deplacement_world_SEIR(world,x,y):
     '''
     
@@ -318,7 +345,7 @@ def deplacement_world_SEIR(world,x,y):
 
 
 
-def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_retire):
+def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_guerison,proba_mort):
     '''
     Hypothese: les probabilites sont sous formes de pourcentages
     
@@ -346,7 +373,7 @@ def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_retire)
                         
                         if(world[y_coord][x_coord]==3): # Si un des ses voisins est infectieux (I)
                             
-                            proba=np.random.randint(0,101)
+                            proba=np.random.randint(1,101)
                             
                             if (proba<=proba_transmission):
                                 world[y][x]=2 # L'individu est contaminé non infectieux (E)
@@ -356,7 +383,7 @@ def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_retire)
                     if (world[y][x]==2): # On regarde un individu contaminé non infectieux (E)
                         
                     
-                        proba=np.random.randint(0,101)
+                        proba=np.random.randint(1,101)
                                 
                         if (proba<=proba_incubation):
                             world[y][x]=3 # L'individu devient infectieux (I)
@@ -367,22 +394,15 @@ def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_retire)
                         if (world[y][x]==3): # On regarde un individu infectieux (I)
                             
                         
-                            proba=np.random.randint(0,101)
+                            proba=np.random.randint(1,101)
                                     
-                            if (proba<=proba_retire):
+                            if (proba<=((proba_guerison+proba_mort)/2)): # Pour R, moyenne guérison et mort pour l'instant
                                 world[y][x]=4 # L'individu est guérri ou mort (R)
     
     return world
                 
                 
         
-def affiche_monde(world:list):
-    
-    '''
-    Affiche un tableau python de type list de facon plus propre et lisible
-    '''
-    
-    print(np.array(world))         
         
         
 monde_test=[[1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
