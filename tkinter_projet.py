@@ -7,6 +7,11 @@ from matplotlib import pyplot as plt
 from main import *
 
 
+from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
+# Implement the default Matplotlib key bindings.
+from matplotlib.backend_bases import key_press_handler
+from matplotlib.figure import Figure
+
 
 def center_window(w):
     eval_ = w.nametowidget('.').eval
@@ -60,6 +65,33 @@ def number_to_color(world:list)->list:
 
 
 
+def number_types(world,tab_nb):
+    
+    nb_S=0
+    nb_E=0
+    nb_I=0
+    nb_R=0
+    for y in range(10):
+        for x in range(10):
+            
+            if world[y][x]==1:
+                nb_S=nb_S+1
+            elif world[y][x]==2:
+                nb_E=nb_E+1
+            elif world[y][x]==3:
+                nb_I=nb_I+1
+            elif world[y][x]==4:
+                nb_R=nb_R+1
+    
+    tab_nb[0].append(nb_S)
+    tab_nb[1].append(nb_E)
+    tab_nb[2].append(nb_I)
+    tab_nb[3].append(nb_R)
+    
+    return tab_nb
+
+
+
 def delete_grille(fenetre):
 
     for widget in fenetre.winfo_children():
@@ -73,15 +105,17 @@ def generer_world(fenetre,aleatoire:bool,nb_S, nb_E, nb_I, nb_R,somme):
     Permet de setup la représentation du monde
     """
     
+    tab_nb=[[],[],[],[]]
+    
     if (aleatoire==True):
         delete_grille(fenetre)
         world=generate_random_world_SEIR()
-        afficher_monde_tkinter(fenetre,world,0,0,0,0,0)
+        afficher_monde_tkinter(fenetre,world,0,0,0,0,0,tab_nb)
         
     elif (aleatoire==False and somme <=100):
         delete_grille(fenetre)
         world=generate_world_SEIR(nb_S, nb_E, nb_I, nb_R)
-        afficher_monde_tkinter(fenetre,world,0,0,0,0,0)
+        afficher_monde_tkinter(fenetre,world,0,0,0,0,0,tab_nb)
     
     elif (aleatoire==False and somme >100): 
         setup_tkinter(False,fenetre)
@@ -100,6 +134,8 @@ def setup_tkinter(first_time:bool,fenetre):
             fenetre.destroy()
 
         fenetre = Tk.Tk()
+        
+        fenetre.bind('<Escape>',lambda e: fenetre.destroy())
         
         fenetre.title("Paramètres évolution d'épidémie")
         fenetre.config(bg = "#87CEEB") 
@@ -153,18 +189,21 @@ def setup_tkinter(first_time:bool,fenetre):
 
 
 
-def afficher_monde_tkinter(fenetre,world,old_incubation,old_transmission,old_guerison,old_mortalite,nb_tours):
+def afficher_monde_tkinter(fenetre,world,old_incubation,old_transmission,old_guerison,old_mortalite,nb_tours,tab_nb):
     
     delete_grille(fenetre)
     
-    fenetre.geometry("1000x600+200+150")
+    fenetre.geometry("1400x800+200+150")
     fenetre.title("Modélisation évolution d'épidémie")
+    
+    fenetre.attributes('-fullscreen', True)
+    fenetre.bind('<Escape>',lambda e: fenetre.destroy())
     
     
     
     # Setup la fenêtre en grille
     
-    for i in range(16):
+    for i in range(22):
         fenetre.columnconfigure(i, weight=1)
     for j in range(20):
         fenetre.rowconfigure(j, weight=1)
@@ -211,12 +250,12 @@ def afficher_monde_tkinter(fenetre,world,old_incubation,old_transmission,old_gue
     Tk.Scale(fenetre,variable=mortalite,font=("Arial",14),bg="#87CEEB",from_=0,to=100,resolution=1,orient="horizontal",length=200).grid(row=8, column=11,rowspan=2)
     
     
-    Tk.Button(fenetre, text = "Itérer 1 fois le monde",font=("Arial",20),command=lambda:afficher_monde_tkinter(fenetre,evolution_world_SEIR(world,int(incubation.get()),int(transmission.get()),int(guerison.get()),int(mortalite.get())),int(incubation.get()),int(transmission.get()),int(guerison.get()),int(mortalite.get()),nb_tours+1)).grid(row=10, column=10,columnspan=2,rowspan=2)
+    tab_nb=number_types(world,tab_nb)
     
+    Tk.Button(fenetre, text = "Itérer 1 fois le monde",font=("Arial",20),command=lambda:afficher_monde_tkinter(fenetre,evolution_world_SEIR(world,int(incubation.get()),int(transmission.get()),int(guerison.get()),int(mortalite.get())),int(incubation.get()),int(transmission.get()),int(guerison.get()),int(mortalite.get()),nb_tours+1,tab_nb)).grid(row=10, column=10,columnspan=2,rowspan=2)
     
-    
-    
-    
+
+
     
     
     # Partie affichée sous le monde
@@ -237,8 +276,26 @@ def afficher_monde_tkinter(fenetre,world,old_incubation,old_transmission,old_gue
     
     Tk.Button(fenetre, text = "Générer un nouveau monde",font=("Arial",20),command=lambda:setup_tkinter(True,fenetre)).grid(row=12, column=0,columnspan=10,pady=10) 
     
+    Tk.Label(fenetre,bg="#87CEEB",text="Appuyez sur échap pour quitter",font=("Arial",20,"bold")).grid(row=13, column=0,sticky='nesw',rowspan=2,columnspan=10)
     
+    # Partie du plot à droite
     
+        
+    fig = Figure(figsize=(3, 2), dpi=100)
+    t = np.arange(0, nb_tours+1, 1)
+    ax = fig.add_subplot()
+        
+    ax.plot(t, tab_nb[0] , color = 'blue')
+    ax.plot(t, tab_nb[1] , color = 'green')
+    ax.plot(t, tab_nb[2] , color = 'orange')
+    ax.plot(t, tab_nb[3] , color = 'red')
+    
+    ax.set_ylabel("Nombre d'individus",labelpad=2,fontsize=18)
+    ax.set_xlabel("Nombre de tours",labelpad=2.5,fontsize=18)
+    
+    canvas = FigureCanvasTkAgg(fig, master=fenetre)  
+    canvas.draw()
+    canvas.get_tk_widget().grid(row=0, column=12,sticky='nesw',columnspan=10,rowspan=10,padx=5,pady=0)
     
     
 setup_tkinter(True,False)
