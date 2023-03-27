@@ -19,7 +19,9 @@ Pendant la semaine des vacances, nous avons discuté sur le modèle qu'on allait
 
 
 ## 5e sem
-image graphique de mtn
+C'est pendant la 5e semaine qu'on a commencé notre code python. On a ainsi impliquer les premières formules sur l'ordinateur en générant plusieurs graphiques.
+Voici une première graphique:
+
 
 ## 6e sem le 13/02
 commence main mettre le code format py
