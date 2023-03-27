@@ -13,7 +13,7 @@ Pendant la troisième séance, nous étions à fond pour terminer notre carnet d
 
 ## Quatrième semaine 27/02 -->
 Pendant la semaine des vacances, Modele sxhelling,
-![](https://www.google.com/url?sa=i&url=http%3A%2F%2Fdemonstrations.wolfram.com%2FSchellingsModelOfResidentialSegregation%2F&psig=AOvVaw35eZd2IBUsUBXlZXqDMo0i&ust=1679996707592000&source=images&cd=vfe&ved=0CBAQjRxqFwoTCND178zp-_0CFQAAAAAdAAAAABAT)
+![]([https://www.google.com/url?sa=i&url=http%3A%2F%2Fdemonstrations.wolfram.com%2FSchellingsModelOfResidentialSegregation%2F&psig=AOvVaw35eZd2IBUsUBXlZXqDMo0i&ust=1679996707592000&source=images&cd=vfe&ved=0CBAQjRxqFwoTCND178zp-_0CFQAAAAAdAAAAABAT](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhEUpt6KIj9L9WBuVPtTHIPnOJJqVBBMQ_dA&usqp=CAU))
 ## 5e sem
 image graphique de mtn
 
