@@ -11,7 +11,7 @@ On a alors trouvé des différentes manières de développer et d'appliquer cert
 ## Troisième semaine 20/02 --> 
 Pendant la troisième séance, nous étions à fond pour terminer notre carnet de bord où se trouve les sources des recherches qu'on a fait. 
 
-## Quatrième semaine 27/02 -->
+### Quatrième semaine 27/02 -->
 Pendant la semaine des vacances, nous avons discuté sur le modèle qu'on allait impliqué sur notre code. Le modèle de ségragation de Schelling a parru être le meilleur choix, vu que l'épidéomologie se base aussi sur le voisinage et les déplacements. Voici une représentation d'une simulation du modèle de Schelling:
 
 ![](https://demonstrations.wolfram.com/SchellingsModelOfResidentialSegregation/img/popup_1.png)
