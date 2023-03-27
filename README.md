@@ -9,18 +9,18 @@ On a alors trouvé des différentes manières de développer et d'appliquer cert
 ![](https://www.mmnp-journal.org/articles/mmnp/full_html/2020/01/mmnp200124/mmnp200124-eq2.png)
  
 ## Troisième semaine 20/02 --> 
-BIBIO à compléter
+Pendant la troisième séance, nous étions à fond pour terminer notre carnet de bord où se trouve les sources des recherches qu'on a fait. 
 
 ## Quatrième semaine 27/02 -->
 Pendant la semaine des vacances, Modele sxhelling,
 
-5e sem
+## 5e sem
 image graphique de mtn
 
-6e sem le 13/02
+## 6e sem le 13/02
 commence main mettre le code format py
 
 fonction d'évolutions du monde spatiale
 
-7e sem 20 
+## 7e sem 20 
 tkinter  interface graphique    les fonction de déplacement des individus dans le monde     
