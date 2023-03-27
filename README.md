@@ -11,7 +11,7 @@ On a alors trouvé des différentes manières de développer et d'appliquer cert
 ## Troisième semaine 20/02 --> 
 Pendant la troisième séance, nous étions à fond pour terminer notre carnet de bord où se trouve les sources des recherches qu'on a fait. 
 
-### Quatrième semaine 27/02 -->
+## Quatrième semaine 27/02 -->
 Pendant la semaine des vacances, nous avons discuté sur le modèle qu'on allait impliqué sur notre code. Le modèle de ségragation de Schelling a parru être le meilleur choix, vu que l'épidéomologie se base aussi sur le voisinage et les déplacements. Voici une représentation d'une simulation du modèle de Schelling:
 
 ![](https://demonstrations.wolfram.com/SchellingsModelOfResidentialSegregation/img/popup_1.png)
@@ -21,12 +21,14 @@ Pendant la semaine des vacances, nous avons discuté sur le modèle qu'on allait
 ## 5e sem
 C'est pendant la 5e semaine qu'on a commencé notre code python. On a ainsi impliquer les premières formules sur l'ordinateur en générant plusieurs graphiques.
 Voici une première graphique:
-
+COLLER ICI
 
 ## 6e sem le 13/02
-commence main mettre le code format py
+La 6e semaine fut la semaine où on a vraiment avancé sur le code python. Voici un extrait du code main.py:
+COLLER ICI
 
-fonction d'évolutions du monde spatiale
+D'ailleurs, on a aussi implémenter les fonction d'évolutions du monde spatiale:
+COLLER ICI
 
 ## 7e sem 20 
 tkinter  interface graphique    les fonction de déplacement des individus dans le monde     
