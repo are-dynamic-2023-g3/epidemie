@@ -14,7 +14,6 @@ Pendant la troisième séance, nous étions à fond pour terminer notre carnet d
 ## Quatrième semaine 27/02 -->
 Pendant la semaine des vacances, nous avons discuté sur le modèle qu'on allait impliqué sur notre code. Le modèle de ségragation de Schelling a parru être le meilleur choix, vu que l'épidéomologie se base aussi sur le voisinage et les déplacements. Voici une représentation du modèle de Schelling:
 ![](https://demonstrations.wolfram.com/SchellingsModelOfResidentialSegregation/img/popup_1.png)
-![](https://www.mdpi.com/mathematics/mathematics-10-03323/article_deploy/html/images/mathematics-10-03323-g001.png)
 
 ## 5e sem
 image graphique de mtn
