@@ -26,6 +26,7 @@ COLLER ICI
 
 ## Sixième semaine 13/03 --> 19/03
 La 6e semaine fut la semaine où on a vraiment avancé sur le code python. Voici un extrait du code main.py:
+
 COLLER ICI
 
 D'ailleurs, on a aussi implémenter les fonction d'évolutions du monde spatiale:
