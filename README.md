@@ -9,3 +9,4 @@ On a alors trouvé des différentes manières de développer et d'appliquer cert
 ![](https://www.mmnp-journal.org/articles/mmnp/full_html/2020/01/mmnp200124/mmnp200124-eq2.png)
  
 ## Troisième semaine 20/02 --> 
+Pendant la semaine des vacances, on a discuté sur le format du code python. On a alors décidé d'implémenter le modèle de ségragation de Schelling sur la simulation de l'épidémie. 
