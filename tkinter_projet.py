@@ -110,12 +110,14 @@ def generer_world(fenetre,aleatoire:bool,nb_S, nb_E, nb_I, nb_R,somme):
     if (aleatoire==True):
         delete_grille(fenetre)
         world=generate_random_world_SEIR()
-        afficher_monde_tkinter(fenetre,world,0,0,0,0,0,tab_nb)
+        matrice_infos_deplacement=[[],[],[]]
+        afficher_monde_tkinter(fenetre,world,0,0,0,0,0,0,tab_nb,matrice_infos_deplacement)
         
     elif (aleatoire==False and somme <=100):
         delete_grille(fenetre)
         world=generate_world_SEIR(nb_S, nb_E, nb_I, nb_R)
-        afficher_monde_tkinter(fenetre,world,0,0,0,0,0,tab_nb)
+        matrice_infos_deplacement=[[],[],[]]
+        afficher_monde_tkinter(fenetre,world,0,0,0,0,0,0,tab_nb,matrice_infos_deplacement)
     
     elif (aleatoire==False and somme >100): 
         setup_tkinter(False,fenetre)
@@ -187,9 +189,18 @@ def setup_tkinter(first_time:bool,fenetre):
 
 
 
+def iterer_tkinter(fenetre,world,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,nb_tours,tab_nb,matrice_infos_deplacement):
+    '''
+    Fonction intermédiaure appelée par l'itération tkinter, affiche le nouveau 
+    monde après itération
+    '''
+    new_world,matrice_infos_deplacement=evolution_world_SEIR(world,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,matrice_infos_deplacement)
+    afficher_monde_tkinter(fenetre,new_world,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,nb_tours+1,tab_nb,matrice_infos_deplacement)
 
 
-def afficher_monde_tkinter(fenetre,world,old_incubation,old_transmission,old_guerison,old_mortalite,nb_tours,tab_nb):
+
+
+def afficher_monde_tkinter(fenetre,world,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,nb_tours,tab_nb,matrice_infos_deplacement):
     
     delete_grille(fenetre)
     
@@ -229,13 +240,14 @@ def afficher_monde_tkinter(fenetre,world,old_incubation,old_transmission,old_gue
     transmission = Tk.IntVar()
     guerison = Tk.IntVar()
     mortalite = Tk.IntVar()
+    deplacement = Tk.IntVar()
     
     
     incubation.set(old_incubation)
     transmission.set(old_transmission)
     guerison.set(old_guerison)
     mortalite.set(old_mortalite)
-    
+    deplacement.set(old_deplacement)
     
     Tk.Label(fenetre,bg="#87CEEB",text="Pourcentage \nd'incubation :",font=("Arial",14,"bold")).grid(row=2, column=10,sticky='nesw',rowspan=2)
     Tk.Scale(fenetre,variable=incubation,font=("Arial",14),bg="#87CEEB",from_=0,to=100,resolution=1,orient="horizontal",length=200).grid(row=2, column=11,rowspan=2)
@@ -249,10 +261,13 @@ def afficher_monde_tkinter(fenetre,world,old_incubation,old_transmission,old_gue
     Tk.Label(fenetre,bg="#87CEEB",text="Pourcentage de \nmortalité :",font=("Arial",14,"bold")).grid(row=8, column=10,sticky='nesw',rowspan=2)
     Tk.Scale(fenetre,variable=mortalite,font=("Arial",14),bg="#87CEEB",from_=0,to=100,resolution=1,orient="horizontal",length=200).grid(row=8, column=11,rowspan=2)
     
+    Tk.Label(fenetre,bg="#87CEEB",text="Pourcentage de \ndéplacement :",font=("Arial",14,"bold")).grid(row=10, column=10,sticky='nesw',rowspan=2)
+    Tk.Scale(fenetre,variable=deplacement,font=("Arial",14),bg="#87CEEB",from_=0,to=100,resolution=1,orient="horizontal",length=200).grid(row=10, column=11,rowspan=2)
+    
     
     tab_nb=number_types(world,tab_nb)
     
-    Tk.Button(fenetre, text = "Itérer 1 fois le monde",font=("Arial",20),command=lambda:afficher_monde_tkinter(fenetre,evolution_world_SEIR(world,int(incubation.get()),int(transmission.get()),int(guerison.get()),int(mortalite.get())),int(incubation.get()),int(transmission.get()),int(guerison.get()),int(mortalite.get()),nb_tours+1,tab_nb)).grid(row=10, column=10,columnspan=2,rowspan=2)
+    Tk.Button(fenetre, text = "Itérer 1 fois le monde",font=("Arial",20),command=lambda:iterer_tkinter(fenetre,world,int(incubation.get()),int(transmission.get()),int(guerison.get()),int(mortalite.get()),int(deplacement.get()),nb_tours,tab_nb,matrice_infos_deplacement)).grid(row=12, column=10,columnspan=2,rowspan=2)
     
 
 
