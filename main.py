@@ -13,8 +13,8 @@ POUR L'INTERFACE GRAPHIQUE IL FAUT EXECUTER tkinter_projet.py
 '''
 α = alpha (taux d'incubation)
 β = beta (taux de transmission)
-γ = gamma (taux de guérison)
-μ = mu (taux de mortalité)
+γ = gamma (taux de guérison + mortalité)
+μ = mu (taux de mortalité) #(pas utilisé ici)
 
 S = personnes saines (taux entre 0 et 1)
 E = personnes infectées non infectieuses (taux entre 0 et 1)
@@ -30,16 +30,16 @@ R = personnes retirées guéries ou mortes (taux entre 0 et 1)
 
 
 
-nb_temps=20
+nb_temps=60
 
-alpha=0.8
-beta=0.5
-gamma=0.1
-mu=0.05
+alpha=0.3
+beta=0.8
+gamma=0.5
+mu=0.05 #(pas utilisé ici)
 
-S=0.65
+S=0.75
 E=0.1
-I=0.25
+I=0.15
 R=0
 population=1
 
@@ -126,14 +126,17 @@ def show_plot_SEIR(S:float, E:float, I:float, R:float,alpha,beta,gamma,mu,nb_tem
     '''
     
     params=setup_tab_param(S,E,I,R,alpha,beta,gamma,mu,nb_temps,population)
-    
+
     
     # S E I R affichés en pourcents entre 0 et 100
     plt.plot(params[5], np.array(params[0])*100, color = 'blue') #S
     plt.plot(params[5], np.array(params[1])*100, color = 'green') #E
     plt.plot(params[5], np.array(params[2])*100, color = 'orange') #I
     plt.plot(params[5], np.array(params[3])*100, color = 'red') #R
-    plt.plot(params[5], np.array(params[4])*100, color = 'purple') #Population
+    #plt.plot(params[5], np.array(params[4])*100, color = 'purple') #Population
+    
+    plt.ylabel('Pourcentage de population')
+    plt.xlabel('Temps (unité arbitraire)')
     
     plt.show()
         
