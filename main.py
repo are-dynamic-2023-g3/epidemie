@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 import numpy as np
 import tkinter as Tk
 from matplotlib import pyplot as plt
@@ -258,6 +259,75 @@ def generate_random_world_SEIR():
 
 
 
+def generate2_world_SEIR(nb_S:int, nb_E:int, nb_I:int, nb_R:int):
+    '''
+    Version 2 de generate_world_SEIR qui renvoit un monde 30*30 (900 individus)
+    '''
+    world=np.zeros((30,30))
+    
+    # On met les probas sur une échelle de 0 à 100
+    probas_individus=[(nb_S/900)*100,(nb_E/900)*100,(nb_I/900)*100,(nb_R/900)*100] #Ce tableau change pas
+    nombre_individus=[nb_S,nb_E,nb_I,nb_R] #Ce tableau change
+    
+    boucler=True
+    while (boucler==True) :
+        
+        
+        for y in range(30):
+            for x in range(30):
+                
+                
+                nb_S=nombre_individus[0]
+                nb_E=nombre_individus[1]
+                nb_I=nombre_individus[2]
+                nb_R=nombre_individus[3]
+                
+                if (world[y][x]==0):
+                
+                    if (nb_S!=0 or nb_E!=0 or nb_I!=0 or nb_R!=0):
+                        
+                        
+                        type_individu=np.random.randint(1,5) # 5 exclu
+                        
+                        while (nombre_individus[type_individu-1]==0):
+                                type_individu=np.random.randint(1,5) # 5 exclu
+                        
+                        proba = np.random.randint(0,101) # 101 exclu
+                        
+                        if (proba<=probas_individus[type_individu-1]):
+                            world[y][x]=type_individu
+                            nombre_individus[type_individu-1]=nombre_individus[type_individu-1]-1
+                
+                
+                if (nb_S==0 and nb_E==0 and nb_I==0 and nb_R==0):
+                    boucler=False
+        
+    return world
+
+
+def generate2_random_world_SEIR():
+    '''
+    Version 2 de generate_random_world_SEIR qui renvoit un monde aléatoire 30*30 (900 individus)
+    
+    '''
+    
+    nb_espaces_vide=np.random.randint(0,559)
+    
+    nb_S=np.random.randint(340,900-nb_espaces_vide)
+    nb_E=np.random.randint(0,900-(nb_S+nb_espaces_vide))
+    nb_I=900-(nb_espaces_vide+nb_S+nb_E)
+    
+    
+    return generate2_world_SEIR(nb_S,nb_E,nb_I,0)
+
+
+
+
+
+
+
+
+
 
 def distance(world,x,y):
     '''
@@ -268,8 +338,8 @@ def distance(world,x,y):
     '''
     liste_coordonnees=[]
     
-    for j in range(10):
-        for i in range(10):
+    for j in range(len(world)):
+        for i in range(len(world[j])):
             
             if(np.maximum(np.abs(i-x),np.abs(j-y)) == 1 and (i,j) != (x,y) and world[j][i]!=0):
                 liste_coordonnees.append((i,j))
@@ -285,8 +355,8 @@ def zero_voisin(world,x,y):
 
     '''
     
-    for j in range(10):
-        for i in range(10):
+    for j in range(len(world)):
+        for i in range(len(world[j])):
             
             if(np.maximum(np.abs(i-x),np.abs(j-y)) == 1 and (i,j) != (x,y) and world[j][i]==0):
                 return True
@@ -304,7 +374,7 @@ def coordonnees_zero(world,coordonnees_origine):
     liste_coordonnees = []
     
     for j in range(len(world)):
-        for i in range(len(world)):
+        for i in range(len(world[j])):
             
             if (world[j][i]==0 and (i,j) not in coordonnees_origine):
                 liste_coordonnees.append((i,j))
@@ -381,68 +451,70 @@ def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_gueriso
     
     
     
-    for y in range(10):
-        for x in range(10):    
+    for y in range(len(world)):
+        for x in range(len(world[y])):    
             
     
-            places_pour_se_deplacer = coordonnees_zero(world,coordonnees_origine)
-
-            proba=np.random.randint(1,101)
+            if (world[y][x]!=0):
             
-            # Cas où l'individu se déplace pendant le tour
-            if(proba<=proba_deplacement and (x,y) not in coordonnees_cible and len(places_pour_se_deplacer)>0 and zero_voisin(world, x, y)==True and (world[y][x]!=0)):
+                places_pour_se_deplacer = coordonnees_zero(world,coordonnees_origine)
+    
+                proba=np.random.randint(1,101)
                 
-                world,x_nouv,y_nouv=deplacement_world_SEIR(world,x,y,coordonnees_origine)
-                
-                coordonnees_origine.append((x,y))
-                coordonnees_cible.append((x_nouv,y_nouv))
-                
-                nb_tours=np.random.randint(1,10)
-                nb_tours_restants.append(nb_tours)
-            
-            # Sinon on regarde si l'individu change d'état
-            else:
-            
-                liste_coordonnees = distance(world,x,y)
-                
-                if(len(liste_coordonnees)>0 and world[y][x]!=0):
+                # Cas où l'individu se déplace pendant le tour
+                if(proba<=proba_deplacement and (x,y) not in coordonnees_cible and len(places_pour_se_deplacer)>0 and zero_voisin(world, x, y)==True):
                     
-                    if (world[y][x]==1): # On regarde un individu sain (S)
-                        
-                        for coord in liste_coordonnees:
-                            
-                            
-                            
-                            x_coord = coord[0]
-                            y_coord = coord[1]
-                            
-                            if(world[y_coord][x_coord]==3): # Si un des ses voisins est infectieux (I)
-                                
-                                proba=np.random.randint(1,101)
-                                
-                                if (proba<=proba_transmission):
-                                    world[y][x]=2 # L'individu est contaminé non infectieux (E)
+                    world,x_nouv,y_nouv=deplacement_world_SEIR(world,x,y,coordonnees_origine)
                     
-                    else:
+                    coordonnees_origine.append((x,y))
+                    coordonnees_cible.append((x_nouv,y_nouv))
+                    
+                    nb_tours=np.random.randint(1,10)
+                    nb_tours_restants.append(nb_tours)
+                
+                # Sinon on regarde si l'individu change d'état
+                else:
+                
+                    liste_coordonnees = distance(world,x,y)
+                    
+                    if(len(liste_coordonnees)>0):
                         
-                        if (world[y][x]==2): # On regarde un individu contaminé non infectieux (E)
+                        if (world[y][x]==1): # On regarde un individu sain (S)
                             
-                        
-                            proba=np.random.randint(1,101)
+                            for coord in liste_coordonnees:
+                                
+                                
+                                
+                                x_coord = coord[0]
+                                y_coord = coord[1]
+                                
+                                if(world[y_coord][x_coord]==3): # Si un des ses voisins est infectieux (I)
                                     
-                            if (proba<=proba_incubation):
-                                world[y][x]=3 # L'individu devient infectieux (I)
-                                
+                                    proba=np.random.randint(1,101)
+                                    
+                                    if (proba<=proba_transmission):
+                                        world[y][x]=2 # L'individu est contaminé non infectieux (E)
+                        
+                        else:
                             
-                        else :
-                            
-                            if (world[y][x]==3): # On regarde un individu infectieux (I)
+                            if (world[y][x]==2): # On regarde un individu contaminé non infectieux (E)
                                 
                             
                                 proba=np.random.randint(1,101)
                                         
-                                if (proba<=((proba_guerison+proba_mort)/2)): # Pour R, moyenne guérison et mort pour l'instant
-                                    world[y][x]=4 # L'individu est guérri ou mort (R)
+                                if (proba<=proba_incubation):
+                                    world[y][x]=3 # L'individu devient infectieux (I)
+                                    
+                                
+                            else :
+                                
+                                if (world[y][x]==3): # On regarde un individu infectieux (I)
+                                    
+                                
+                                    proba=np.random.randint(1,101)
+                                            
+                                    if (proba<=((proba_guerison+proba_mort)/2)): # Pour R, moyenne guérison et mort pour l'instant
+                                        world[y][x]=4 # L'individu est guérri ou mort (R)
     
     
     
@@ -481,9 +553,23 @@ def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_gueriso
     return world,matrice_infos_deplacement
                 
                 
+def multi_evolution_world_SEIR(nb_tours,world,proba_incubation,proba_transmission,proba_guerison,proba_mort,proba_deplacement,matrice_infos_deplacement):
+    '''
+    Renvoit un monde après plusieurs itérations SEIR
+    '''
+    print("\nTour : 0\n")
+    affiche_monde(world)
+
+    for i in range(nb_tours):
         
-     
+        world,matrice_infos_deplacement=evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_guerison,proba_mort,proba_deplacement,matrice_infos_deplacement)
+        print("\nTour :",i+1,"\n")
+        affiche_monde(world)
+        
+    return world
+
 '''
+
 monde_test=[[1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
  [3, 1, 1, 1, 1, 0, 1, 1, 1, 1],
  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -495,24 +581,22 @@ monde_test=[[1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
  [1, 1, 0, 1, 1, 1, 1, 1, 1, 1],
  [0, 1, 1, 1, 0, 0, 1, 1, 0, 1]]
 
-
-
-
-# LOI DES GRANDS NOMBRES
-# MOYENNE DE COURBES
-
-affiche_monde(monde_test)
-
 proba_incubation=50
 proba_transmission=30
 proba_guerison=30
 proba_mort=20
 proba_deplacement=5
 
-for i in range(5):
-    print("\nTour :",i,"\n")
-    evolution_world_SEIR(monde_test,proba_incubation,proba_transmission,proba_guerison,proba_mort,proba_deplacement,matrice_infos_deplacement)
-    affiche_monde(monde_test)
-    
+multi_evolution_world_SEIR(10,monde_test,proba_incubation,proba_transmission,proba_guerison,proba_mort,proba_deplacement,matrice_infos_deplacement)
+
+
+
+# LOI DES GRANDS NOMBRES
+# MOYENNE DE COURBES
+
 
 '''
+
+
+
+
