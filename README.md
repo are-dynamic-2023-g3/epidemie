@@ -11,7 +11,7 @@ On a alors trouvé des différentes manières de développer et d'appliquer cert
 
 D'ailleurs, on a notamment parlé sur la forme de notre modèle SEIR. Voici une simple représentation de notre modèle finale:
 
-![](https://cdn.comsol.com/wordpress/sites/1/2020/04/SEIR-compartmental-model-schematic.png)
+![]([https://cdn.comsol.com/wordpress/sites/1/2020/04/SEIR-compartmental-model-schematic.png](https://www.linkpicture.com/q/image_2023-04-02_183544767.png))
 
 α = Taux d'incubation, β = Taux de transmission, γ = Taux de guérisson + mortalité(On différencie pas pour l'instant la mortalité de la guérison)
 N = 1(Population totale)
