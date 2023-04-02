@@ -4,6 +4,7 @@ import numpy as np
 import tkinter as Tk
 from matplotlib import pyplot as plt
 from main import *
+import copy
 
 
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
@@ -103,11 +104,12 @@ def delete_grille(fenetre):
     """
 
     for widget in fenetre.winfo_children():
-        widget.grid_forget()
-        widget.destroy()
-
-
-    
+        if isinstance(widget,Tk.Toplevel):
+            widget.destroy()
+        else:
+            widget.grid_forget()
+            widget.destroy()
+            
     
 
 # On cree notre fenetre Tkinter
@@ -254,6 +256,39 @@ def multi_iterer_tkinter(nb_tours_itere,fenetre,world,old_incubation,old_transmi
     afficher_monde_tkinter(fenetre,world,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,(nb_tours+nb_tours_itere),tab_nb,matrice_infos_deplacement)
 
 
+def simulation_generale(nb_simus,nb_tours_itere,fenetre2,world,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,nb_tours,tab_nb,matrice_infos_deplacement):
+    '''
+    Permet de récupérer la moyenne de "nb_simus" simulations sur "nb_tours_itere" tours
+    à partir d'un monde de départ "world". Affiche ensuite le résultat avec
+    la fonction affiche_simus_generales sur l'écran de simulation
+    '''
+    
+    world_simu=[]
+    matrice_infos_deplacement_simu=[]
+    tab_nb_simu=[]
+    
+    for i in range(nb_simus):
+        world_simu=copy.deepcopy(world)
+        matrice_infos_deplacement_simu=copy.deepcopy(matrice_infos_deplacement)
+        tab_nb_simu=copy.deepcopy(tab_nb)
+        
+        
+        for j in range(nb_tours_itere):
+            world_simu,matrice_infos_deplacement_simu=evolution_world_SEIR(world_simu,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,matrice_infos_deplacement_simu)
+            tab_nb_simu=number_types(world_simu,tab_nb_simu)
+        
+        # tab_nb_resultat : np.array
+        if (i==0):
+            tab_nb_resultat=np.array(tab_nb_simu)
+        else:
+            tab_nb_resultat=tab_nb_resultat+np.array(tab_nb_simu)
+    
+    tab_nb_resultat=tab_nb_resultat/nb_simus
+    tab_nb_resultat=tab_nb_resultat.tolist()
+    
+    affiche_simus_generales(fenetre2,world,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,nb_tours+nb_tours_itere,tab_nb_resultat,matrice_infos_deplacement_simu,False)
+        
+
 def afficher_monde_tkinter(fenetre,world,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,nb_tours,tab_nb,matrice_infos_deplacement):
     '''
     Affichage permettant d'itérer le monde
@@ -376,6 +411,127 @@ def afficher_monde_tkinter(fenetre,world,old_incubation,old_transmission,old_gue
     canvas = FigureCanvasTkAgg(fig, master=fenetre)  
     canvas.draw()
     canvas.get_tk_widget().grid(row=0*echelle, column=12*echelle,sticky='nesw',columnspan=10*echelle,rowspan=10*echelle_ligne,padx=5,pady=0)
+
+    if (len(world)==10):
+        Tk.Button(fenetre, text = "Simulation générale à partir du monde",font=("Arial",20),command=lambda:setup_affiche_simus_generales(fenetre,world,int(incubation.get()),int(transmission.get()),int(guerison.get()),int(mortalite.get()),int(deplacement.get()),nb_tours,tab_nb,matrice_infos_deplacement)).grid(row=17*echelle_ligne, column=12*echelle,columnspan=10*echelle,pady=10,rowspan=1*echelle_ligne) 
+
+
+
+
+
+def setup_affiche_simus_generales(fenetre,world,incubation,transmission,guerison,mortalite,deplacement,nb_tours,tab_nb,matrice_infos_deplacement):
+    '''
+    Setup l'affichage de simulation, on regarde si il y a pas déjà une fenêtre de simulation ouverte
+    Si c'est le cas on la détruit avant d'afficher l'affichage de simulation
+    '''
+    
+    for widget in fenetre.winfo_children():
+        if isinstance(widget,Tk.Toplevel):
+            widget.destroy()
+            
+    fenetre2 = Tk.Toplevel(fenetre)
+        
+    fenetre2.title("Simulation générale")
+    fenetre2.config(bg = "#87CEEB") 
+    fenetre2.bind('<Escape>',lambda e: fenetre2.destroy())
+        
+    #fenetre.geometry("1000x400+500+300")
+    fenetre2.geometry("1400x600")
+    fenetre2.attributes('-topmost', 1)
+    center_window(fenetre2)
+    
+    affiche_simus_generales(fenetre2,world,incubation,transmission,guerison,mortalite,deplacement,nb_tours,tab_nb,matrice_infos_deplacement,True)
+
+    fenetre2.mainloop()   
+    
+    
+def affiche_simus_generales(fenetre2,world,incubation,transmission,guerison,mortalite,deplacement,nb_tours,tab_nb,matrice_infos_deplacement,first_time):
+    '''
+    Affiche la fenêtre de simulation
+    ''' 
+    
+    for i in range(22):
+        fenetre2.columnconfigure(i, weight=1)
+    for j in range(20):
+        fenetre2.rowconfigure(j, weight=1)
+    
+    delete_grille(fenetre2)
+    
+    # Affichage de gauche de la fenêtre
+    
+    Tk.Label(fenetre2,bg="#87CEEB",text="Notre monde avant simulation",font=("Arial",18,"bold")).grid(row=0, column=0,sticky='nesw',columnspan=10,rowspan=2)
+    
+    world_color=number_to_color(world)
+    
+    for y in range(len(world)):
+        for x in range(len(world[y])):
+            Tk.Label(fenetre2,bg=world_color[y][x]).grid(row=2+y, column=x,sticky='nesw',padx=5, pady=5)
+    
+    
+    incubation2 = Tk.IntVar()
+    transmission2 = Tk.IntVar()
+    guerison2 = Tk.IntVar()
+    mortalite2 = Tk.IntVar()
+    deplacement2 = Tk.IntVar()
+    
+    incubation2.set(incubation)
+    transmission2.set(transmission)
+    guerison2.set(guerison)
+    mortalite2.set(mortalite)
+    deplacement2.set(deplacement)
+    
+    
+    # Affichage du milieu de la fenêtre
+    
+    text_nb_tours=str(nb_tours)
+    Tk.Label(fenetre2,bg="#87CEEB",text="Tours : "+text_nb_tours,font=("Arial",30,"bold")).grid(row=0, column=10,sticky='nesw',columnspan=2,rowspan=2)
+    
+    
+    Tk.Label(fenetre2,bg="#87CEEB",text="Pourcentage \nd'incubation :",font=("Arial",14,"bold")).grid(row=2, column=10,sticky='nesw',rowspan=2)
+    Tk.Scale(fenetre2,variable=incubation2,font=("Arial",14),bg="#87CEEB",from_=0,to=100,resolution=1,orient="horizontal",length=200).grid(row=2, column=11,rowspan=2)
+    
+    Tk.Label(fenetre2,bg="#87CEEB",text="Pourcentage de \ntransmission :",font=("Arial",14,"bold")).grid(row=4, column=10,sticky='nesw',rowspan=2)
+    Tk.Scale(fenetre2,variable=transmission2,font=("Arial",14),bg="#87CEEB",from_=0,to=100,resolution=1,orient="horizontal",length=200).grid(row=4, column=11,rowspan=2)
+    
+    Tk.Label(fenetre2,bg="#87CEEB",text="Pourcentage de \nguérison :",font=("Arial",14,"bold")).grid(row=6, column=10,sticky='nesw',rowspan=2)
+    Tk.Scale(fenetre2,variable=guerison2,font=("Arial",14),bg="#87CEEB",from_=0,to=100,resolution=1,orient="horizontal",length=200).grid(row=6, column=11,rowspan=2)
+    
+    Tk.Label(fenetre2,bg="#87CEEB",text="Pourcentage de \nmortalité :",font=("Arial",14,"bold")).grid(row=8, column=10,sticky='nesw',rowspan=2)
+    Tk.Scale(fenetre2,variable=mortalite2,font=("Arial",14),bg="#87CEEB",from_=0,to=100,resolution=1,orient="horizontal",length=200).grid(row=8, column=11,rowspan=2)
+    
+    Tk.Label(fenetre2,bg="#87CEEB",text="Pourcentage de \ndéplacement :",font=("Arial",14,"bold")).grid(row=10, column=10,sticky='nesw',rowspan=2)
+    Tk.Scale(fenetre2,variable=deplacement2,font=("Arial",14),bg="#87CEEB",from_=0,to=100,resolution=1,orient="horizontal",length=200).grid(row=10, column=11,rowspan=2)
+    
+    
+    if (first_time==True):
+        Tk.Button(fenetre2, text = "Simuler (100 tours)",font=("Arial",20),command=lambda:simulation_generale(30,100,fenetre2,world,int(incubation2.get()),int(transmission2.get()),int(guerison2.get()),int(mortalite2.get()),int(deplacement2.get()),nb_tours,tab_nb,matrice_infos_deplacement)).grid(row=12, column=10,columnspan=2,pady=10,rowspan=2)
+        
+        
+
+    
+    # Affichage de droite de la fenêtre
+    
+    if (first_time==True):
+        Tk.Label(fenetre2,bg="#87CEEB",text="Notre graphe avant simulation",font=("Arial",18,"bold")).grid(row=0, column=12,sticky='nesw',columnspan=10,rowspan=2)
+    else:
+        Tk.Label(fenetre2,bg="#87CEEB",text="Notre graphe après simulation",font=("Arial",18,"bold")).grid(row=0, column=12,sticky='nesw',columnspan=10,rowspan=2)
+    
+    fig2 = Figure(figsize=(3, 2), dpi=100)
+    t = np.arange(0, nb_tours+1, 1)
+    ax2 = fig2.add_subplot()
+        
+    ax2.plot(t, tab_nb[0] , color = 'blue')
+    ax2.plot(t, tab_nb[1] , color = 'green')
+    ax2.plot(t, tab_nb[2] , color = 'orange')
+    ax2.plot(t, tab_nb[3] , color = 'red')
+    
+    ax2.set_ylabel("Nombre d'individus",labelpad=-4,fontsize=18)
+    ax2.set_xlabel("Nombre de tours",labelpad=2.5,fontsize=18)
+    
+    canvas2 = FigureCanvasTkAgg(fig2, master=fenetre2)  
+    canvas2.draw()
+    canvas2.get_tk_widget().grid(row=2, column=12,sticky='nesw',columnspan=10,rowspan=10,padx=5,pady=0)
+    
     
     
 ''' Lance l'interface ''' 
