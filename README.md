@@ -47,13 +47,15 @@ Paramètres α = 0.3, β = 0.8, γ = 0.5
 ![](https://www.linkpicture.com/q/image_2023-04-02_175439863.png)
 
 ## Sixième semaine 13/03 --> 19/03
-La 6e semaine fut la semaine où on a vraiment avancé sur le code python. Voici un extrait du code main.py:
+La 6e semaine fut la semaine où on a vraiment avancé sur le code python. Voici un extrait du code main.py sur la fonction d'évolution spatiale:
 
-COLLER ICI
+![](https://www.linkpicture.com/q/image_2023-04-03_011747937.png)
 
-D'ailleurs, on a aussi implémenter les fonction d'évolutions du monde spatiale:
+Voici les résultats des tests:
 
-COLLER ICI
+Paramètres des probabilités α = 50%, β =30%, γ = 30%
+
+![](https://www.linkpicture.com/q/image_2023-04-03_012158657.png)
 
 ## Septième semaine 20/03 --> 26/03
 Pendant la septième semaine, on a commencé a implémenté l'interface graphique avec le module tkinter de python. Grace à tkinter, on arrive à faire des simulations de l'épidémie d'une manière itérative. On trouve en disposition les échelles, c'est à dire la grandeur de la population, le taux de mortalité par la maladie et le taux de propagation.
