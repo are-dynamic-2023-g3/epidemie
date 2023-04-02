@@ -1,7 +1,7 @@
 # Modèle SEIR
 ## Première semaine 6/02 --> 12/02
 Pendant la prémière séance, nous avons discuté sur plusieurs sujets qui nous baser sur l'épidémiologie, un phénomène intéressant à rechercher. On a décidé alors de se concentrer sur le modèle SEIR, dérivé du modèle SIR. Voici une simple représentation du modèle:
-![](https://www.linkpicture.com/view.php?img=LPic6429985f99d2d1001677011")
+![](https://www.linkpicture.com/q/graphe_seir_premiere_semaine.png)
 
 ## Deuxième semaine 13/02 --> 19/02
 Pendant la deuxième séance, nous étions à la B.U recherchant des documentations, plus précisement des recherches faites sur le sujet, des livres écritent.
