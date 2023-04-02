@@ -29,12 +29,21 @@ Pendant la semaine des vacances, nous avons discuté sur le modèle qu'on allait
 
 ## Cinquième semaine 06/03 --> 12/03
 C'est pendant la 5e semaine qu'on a commencé notre code python. On a ainsi impliquer les premières formules sur l'ordinateur en générant plusieurs graphiques.
+
 Voici une première graphique avec populations de départ S=80% E=10% I=10% R=0%:
 Paramètres α = 0.4, β = 0.4, γ = 0.1
 
 ![](https://www.linkpicture.com/q/image_2023-04-02_173357243.png)
+ 
+Une deuxième graphique avec populations de départ S=50% E=10% I=40% R=0%:
+Paramètres α = 0.9, β = 0.4, γ = 0.3
 
-![] 
+![](https://ibb.co/J2qM8H8)
+
+Une troisième graphique avec populations de départ S=75% E=10% I=15% R=0%:
+Paramètres α = 0.3, β = 0.8, γ = 0.5
+
+![](https://ibb.co/Vj65PJm)
 
 ## Sixième semaine 13/03 --> 19/03
 La 6e semaine fut la semaine où on a vraiment avancé sur le code python. Voici un extrait du code main.py:
