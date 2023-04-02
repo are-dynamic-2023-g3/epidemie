@@ -549,7 +549,7 @@ def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_gueriso
         
     #print(coordonnees_origine,"\n")    
     #print(coordonnees_cible,"\n")    
-    #print(nb_tours_restants)
+    #print(nb_tours_restants,"\n")
     return world,matrice_infos_deplacement
                 
                 
