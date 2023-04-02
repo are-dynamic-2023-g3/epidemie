@@ -38,12 +38,12 @@ Paramètres α = 0.4, β = 0.4, γ = 0.1
 Une deuxième graphique avec populations de départ S=50% E=10% I=40% R=0%:
 Paramètres α = 0.9, β = 0.4, γ = 0.3
 
-![](https://ibb.co/J2qM8H8)
+![]()
 
 Une troisième graphique avec populations de départ S=75% E=10% I=15% R=0%:
 Paramètres α = 0.3, β = 0.8, γ = 0.5
 
-![](https://ibb.co/Vj65PJm)
+![](https://ibb.co/Vj65PJm](https://www.linkpicture.com/q/image_2023-04-02_175439863.png)
 
 ## Sixième semaine 13/03 --> 19/03
 La 6e semaine fut la semaine où on a vraiment avancé sur le code python. Voici un extrait du code main.py:
