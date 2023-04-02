@@ -10,8 +10,11 @@ On a alors trouvé des différentes manières de développer et d'appliquer cert
 ![](https://www.mmnp-journal.org/articles/mmnp/full_html/2020/01/mmnp200124/mmnp200124-eq2.png)
 
 D'ailleurs, on a notamment parlé sur la forme de notre modèle SEIR. Voici une simple représentation de notre modèle finale:
+
 ![](https://cdn.comsol.com/wordpress/sites/1/2020/04/SEIR-compartmental-model-schematic.png)
-α = Taux d'incubation, β = Taux de transmission, γ = Taux de guérisson + mortalité(On différencie pas pour l'instant la mortalité de la guérison), N(population totale = 1
+
+α = Taux d'incubation, β = Taux de transmission, γ = Taux de guérisson + mortalité(On différencie pas pour l'instant la mortalité de la guérison)
+N = 1(Population totale)
 
  
 ## Troisième semaine 20/02 --> 26/02
