@@ -415,7 +415,7 @@ def deplacement_world_SEIR(world,x,y,coordonnees_origine):
                 
 
 matrice_infos_deplacement=[[],[],[]]
-def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_guerison,proba_mort,proba_deplacement,matrice_infos_deplacement):
+def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_guerison,proba_mort,proba_deplacement,matrice_infos_deplacement, confinement):
     '''
     Hypothese: les probabilites sont sous formes de pourcentages
     
@@ -436,6 +436,11 @@ def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_gueriso
         
     Chaque individu qui se déplace part à des coordonnées dispos pendant max 10 tours,
     avant de revenir à son point de départ (il peut changer d'état entre temps)
+                                            
+    La valeur du parametre confinement ne doit prendre que soit 0, soit 1 soit 2:
+        - si confinement = 0: il n'y a pas de confinement
+        - si confinement = 1: il y a un confinement mais il reste des chances pour les individus de se deplacer
+        - si confinement = 2: il n'y a aucune chance que les individus se deplacent
     
     '''
     
@@ -450,6 +455,14 @@ def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_gueriso
     # on récupère les informations d'un individu en déplacement
     
     
+    if confinement == 1:
+        
+        proba_deplacement = proba_deplacement / 10
+    
+    if confinement == 2:
+        
+        proba_deplacement = 0
+    
     
     for y in range(len(world)):
         for x in range(len(world[y])):    
@@ -460,6 +473,7 @@ def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_gueriso
                 places_pour_se_deplacer = coordonnees_zero(world,coordonnees_origine)
     
                 proba=np.random.randint(1,101)
+                
                 
                 # Cas où l'individu se déplace pendant le tour
                 if(proba<=proba_deplacement and (x,y) not in coordonnees_cible and len(places_pour_se_deplacer)>0 and zero_voisin(world, x, y)==True):
