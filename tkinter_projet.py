@@ -2,6 +2,7 @@
 
 import numpy as np
 import tkinter as Tk
+from tkinter import ttk
 from matplotlib import pyplot as plt
 from main import *
 import copy
@@ -207,7 +208,8 @@ def generer_world(fenetre,aleatoire:bool,nb_S, nb_E, nb_I, nb_R,somme,maxi):
             world=generate2_random_world_SEIR()
         matrice_infos_deplacement=[[],[],[]]
         tab_nb=number_types(world,tab_nb)
-        afficher_monde_tkinter(fenetre,world,0,0,0,0,0,0,tab_nb,matrice_infos_deplacement)
+        matrice_infection=np.zeros((len(world),len(world)))
+        afficher_monde_tkinter(fenetre,world,0,0,0,0,0,0,tab_nb,matrice_infos_deplacement,"Pas de confinement",matrice_infection)
         
     elif (aleatoire==False and somme <=maxi):
         delete_grille(fenetre)
@@ -218,7 +220,8 @@ def generer_world(fenetre,aleatoire:bool,nb_S, nb_E, nb_I, nb_R,somme,maxi):
             world=generate2_world_SEIR(nb_S, nb_E, nb_I, nb_R)
         matrice_infos_deplacement=[[],[],[]]
         tab_nb=number_types(world,tab_nb)
-        afficher_monde_tkinter(fenetre,world,0,0,0,0,0,0,tab_nb,matrice_infos_deplacement)
+        matrice_infection=np.zeros((len(world),len(world)))
+        afficher_monde_tkinter(fenetre,world,0,0,0,0,0,0,tab_nb,matrice_infos_deplacement,"Pas de confinement",matrice_infection)
     
     elif (aleatoire==False and somme >maxi): 
         if (maxi==100):
@@ -229,18 +232,18 @@ def generer_world(fenetre,aleatoire:bool,nb_S, nb_E, nb_I, nb_R,somme,maxi):
 
 
 
-def iterer_tkinter(fenetre,world,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,nb_tours,tab_nb,matrice_infos_deplacement):
+def iterer_tkinter(fenetre,world,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,nb_tours,tab_nb,matrice_infos_deplacement,confinement,matrice_infection):
     '''
     Fonction intermédiaure appelée par l'itération tkinter, affiche le nouveau 
     monde après itération
     '''
-    world,matrice_infos_deplacement=evolution_world_SEIR(world,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,matrice_infos_deplacement)
+    world,matrice_infos_deplacement=evolution_world_SEIR(world,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,matrice_infos_deplacement,confinement,matrice_infection)
     tab_nb=number_types(world,tab_nb)
-    afficher_monde_tkinter(fenetre,world,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,nb_tours+1,tab_nb,matrice_infos_deplacement)
+    afficher_monde_tkinter(fenetre,world,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,nb_tours+1,tab_nb,matrice_infos_deplacement,confinement,matrice_infection)
 
 
 
-def multi_iterer_tkinter(nb_tours_itere,fenetre,world,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,nb_tours,tab_nb,matrice_infos_deplacement):
+def multi_iterer_tkinter(nb_tours_itere,fenetre,world,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,nb_tours,tab_nb,matrice_infos_deplacement,confinement,matrice_infection):
     '''
     Fonction intermédiaure appelée par l'itération tkinter, affiche le nouveau 
     monde après plusieurs itérations
@@ -250,10 +253,10 @@ def multi_iterer_tkinter(nb_tours_itere,fenetre,world,old_incubation,old_transmi
     
     
     for i in range(nb_tours_itere):
-        world,matrice_infos_deplacement=evolution_world_SEIR(world,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,matrice_infos_deplacement)
+        world,matrice_infos_deplacement=evolution_world_SEIR(world,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,matrice_infos_deplacement,confinement,matrice_infection)
         tab_nb=number_types(world,tab_nb)
         
-    afficher_monde_tkinter(fenetre,world,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,(nb_tours+nb_tours_itere),tab_nb,matrice_infos_deplacement)
+    afficher_monde_tkinter(fenetre,world,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,(nb_tours+nb_tours_itere),tab_nb,matrice_infos_deplacement,confinement,confinement,matrice_infection)
 
 
 def simulation_generale(nb_simus,nb_tours_itere,fenetre2,world,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,nb_tours,tab_nb,matrice_infos_deplacement):
@@ -289,7 +292,7 @@ def simulation_generale(nb_simus,nb_tours_itere,fenetre2,world,old_incubation,ol
     affiche_simus_generales(fenetre2,world,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,nb_tours+nb_tours_itere,tab_nb_resultat,matrice_infos_deplacement_simu,False)
         
 
-def afficher_monde_tkinter(fenetre,world,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,nb_tours,tab_nb,matrice_infos_deplacement):
+def afficher_monde_tkinter(fenetre,world,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,nb_tours,tab_nb,matrice_infos_deplacement,confinement,matrice_infection):
     '''
     Affichage permettant d'itérer le monde
     '''
@@ -348,29 +351,39 @@ def afficher_monde_tkinter(fenetre,world,old_incubation,old_transmission,old_gue
     mortalite.set(old_mortalite)
     deplacement.set(old_deplacement)
     
-    Tk.Label(fenetre,bg="#87CEEB",text="Pourcentage \nd'incubation :",font=("Arial",14,"bold")).grid(row=2*echelle_ligne, column=10*echelle,sticky='nesw',rowspan=2*echelle_ligne)
+    Tk.Label(fenetre,bg="#87CEEB",text="Pourcentage \nd'incubation :",font=("Arial",18,"bold")).grid(row=2*echelle_ligne, column=10*echelle,sticky='nesw',rowspan=2*echelle_ligne)
     Tk.Scale(fenetre,variable=incubation,font=("Arial",14),bg="#87CEEB",from_=0,to=100,resolution=1,orient="horizontal",length=200).grid(row=2*echelle_ligne, column=11*echelle,rowspan=2*echelle_ligne)
     
-    Tk.Label(fenetre,bg="#87CEEB",text="Pourcentage de \ntransmission :",font=("Arial",14,"bold")).grid(row=4*echelle_ligne, column=10*echelle,sticky='nesw',rowspan=2*echelle_ligne)
+    Tk.Label(fenetre,bg="#87CEEB",text="Pourcentage de \ntransmission :",font=("Arial",18,"bold")).grid(row=4*echelle_ligne, column=10*echelle,sticky='nesw',rowspan=2*echelle_ligne)
     Tk.Scale(fenetre,variable=transmission,font=("Arial",14),bg="#87CEEB",from_=0,to=100,resolution=1,orient="horizontal",length=200).grid(row=4*echelle_ligne, column=11*echelle,rowspan=2*echelle_ligne)
     
-    Tk.Label(fenetre,bg="#87CEEB",text="Pourcentage de \nguérison :",font=("Arial",14,"bold")).grid(row=6*echelle_ligne, column=10*echelle,sticky='nesw',rowspan=2*echelle_ligne)
+    Tk.Label(fenetre,bg="#87CEEB",text="Pourcentage de \nguérison :",font=("Arial",18,"bold")).grid(row=6*echelle_ligne, column=10*echelle,sticky='nesw',rowspan=2*echelle_ligne)
     Tk.Scale(fenetre,variable=guerison,font=("Arial",14),bg="#87CEEB",from_=0,to=100,resolution=1,orient="horizontal",length=200).grid(row=6*echelle_ligne, column=11*echelle,rowspan=2*echelle_ligne)
     
-    Tk.Label(fenetre,bg="#87CEEB",text="Pourcentage de \nmortalité :",font=("Arial",14,"bold")).grid(row=8*echelle_ligne, column=10*echelle,sticky='nesw',rowspan=2*echelle_ligne)
+    Tk.Label(fenetre,bg="#87CEEB",text="Pourcentage de \nmortalité :",font=("Arial",18,"bold")).grid(row=8*echelle_ligne, column=10*echelle,sticky='nesw',rowspan=2*echelle_ligne)
     Tk.Scale(fenetre,variable=mortalite,font=("Arial",14),bg="#87CEEB",from_=0,to=100,resolution=1,orient="horizontal",length=200).grid(row=8*echelle_ligne, column=11*echelle,rowspan=2*echelle_ligne)
     
-    Tk.Label(fenetre,bg="#87CEEB",text="Pourcentage de \ndéplacement :",font=("Arial",14,"bold")).grid(row=10*echelle_ligne, column=10*echelle,sticky='nesw',rowspan=2*echelle_ligne)
+    Tk.Label(fenetre,bg="#87CEEB",text="Pourcentage de \ndéplacement :",font=("Arial",18,"bold")).grid(row=10*echelle_ligne, column=10*echelle,sticky='nesw',rowspan=2*echelle_ligne)
     Tk.Scale(fenetre,variable=deplacement,font=("Arial",14),bg="#87CEEB",from_=0,to=100,resolution=1,orient="horizontal",length=200).grid(row=10*echelle_ligne, column=11*echelle,rowspan=2*echelle_ligne)
     
     
     
-    Tk.Button(fenetre, text = "Itérer 1 fois le monde",font=("Arial",18),command=lambda:iterer_tkinter(fenetre,world,int(incubation.get()),int(transmission.get()),int(guerison.get()),int(mortalite.get()),int(deplacement.get()),nb_tours,tab_nb,matrice_infos_deplacement)).grid(row=12*echelle_ligne, column=10*echelle,columnspan=1*echelle,rowspan=2*echelle_ligne)
+    Tk.Button(fenetre, text = "Itérer 1 fois le monde",font=("Arial",18),command=lambda:iterer_tkinter(fenetre,world,int(incubation.get()),int(transmission.get()),int(guerison.get()),int(mortalite.get()),int(deplacement.get()),nb_tours,tab_nb,matrice_infos_deplacement,str(combobox.get()),matrice_infection)).grid(row=12*echelle_ligne, column=10*echelle,columnspan=1*echelle,rowspan=2*echelle_ligne)
     
     
     nb_tours_itere=Tk.IntVar()
     Tk.Spinbox(fenetre, from_= 0, to = 1000,textvariable=nb_tours_itere,font=("Arial",16)).grid(row=13*echelle_ligne, column=11*echelle,columnspan=1*echelle,rowspan=2*echelle_ligne)
-    Tk.Button(fenetre, text = "Itérer n fois le monde",font=("Arial",18),command=lambda:multi_iterer_tkinter(int(nb_tours_itere.get()),fenetre,world,int(incubation.get()),int(transmission.get()),int(guerison.get()),int(mortalite.get()),int(deplacement.get()),nb_tours,tab_nb,matrice_infos_deplacement)).grid(row=12*echelle_ligne, column=11*echelle,columnspan=1*echelle,rowspan=2*echelle_ligne)
+    Tk.Button(fenetre, text = "Itérer n fois le monde",font=("Arial",18),command=lambda:multi_iterer_tkinter(int(nb_tours_itere.get()),fenetre,world,int(incubation.get()),int(transmission.get()),int(guerison.get()),int(mortalite.get()),int(deplacement.get()),nb_tours,tab_nb,matrice_infos_deplacement,str(combobox.get()),matrice_infection)).grid(row=12*echelle_ligne, column=11*echelle,columnspan=1*echelle,rowspan=2*echelle_ligne)
+    
+    
+    Tk.Label(fenetre,bg="#87CEEB",text="Confinement :",font=("Arial",18,"bold")).grid(row=15*echelle_ligne, column=10*echelle,sticky='nesw',rowspan=2*echelle_ligne,columnspan=1*echelle)
+    
+    
+
+    combobox=Tk.ttk.Combobox(fenetre, textvariable="Test", values = ["Pas de confinement", "Confinement normal", "Confinement strict"],font=("Arial",18,"bold"))
+    combobox.set(confinement)
+    combobox.grid(row=15*echelle_ligne, column=11*echelle,rowspan=2*echelle_ligne,columnspan=1*echelle)
+    
     
     
     # Partie affichée sous le monde
@@ -504,7 +517,7 @@ def affiche_simus_generales(fenetre2,world,incubation,transmission,guerison,mort
     
     
     if (first_time==True):
-        Tk.Button(fenetre2, text = "Simuler (100 tours)",font=("Arial",20),command=lambda:simulation_generale(30,100,fenetre2,world,int(incubation2.get()),int(transmission2.get()),int(guerison2.get()),int(mortalite2.get()),int(deplacement2.get()),nb_tours,tab_nb,matrice_infos_deplacement)).grid(row=12, column=10,columnspan=2,pady=10,rowspan=2)
+        Tk.Button(fenetre2, text = "Simuler (100 tours)",font=("Arial",20),command=lambda:simulation_generale(20,100,fenetre2,world,int(incubation2.get()),int(transmission2.get()),int(guerison2.get()),int(mortalite2.get()),int(deplacement2.get()),nb_tours,tab_nb,matrice_infos_deplacement)).grid(row=12, column=10,columnspan=2,pady=10,rowspan=2)
         
         
 
