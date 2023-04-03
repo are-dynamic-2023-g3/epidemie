@@ -60,5 +60,14 @@ Paramètres des probabilités α = 50%, β =30%, γ = 30%
 ## Septième semaine 20/03 --> 26/03
 Pendant la septième semaine, on a commencé a implémenté l'interface graphique avec le module tkinter de python. Grace à tkinter, on arrive à faire des simulations de l'épidémie d'une manière itérative. On trouve en disposition les échelles, c'est à dire la grandeur de la population, le taux de mortalité par la maladie et le taux de propagation.
 
-COLLER ICI
+Voici l'interface de l'accueil de notre simulateur:
 
+![](https://www.linkpicture.com/q/image_2023-04-03_023431405.png)
+
+De plus, voici 3 instants du simulation avec plusieurs itérations:
+
+![](https://www.linkpicture.com/q/image_2023-04-03_023721496.png)
+
+![](https://www.linkpicture.com/q/image_2023-04-03_023834588.png)
+
+![](https://www.linkpicture.com/q/image_2023-04-03_024012020.png)
