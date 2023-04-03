@@ -383,7 +383,7 @@ def coordonnees_zero(world,coordonnees_origine):
 
 
 
-
+    
 
 def deplacement_world_SEIR(world,x,y,coordonnees_origine):
     '''
@@ -413,9 +413,9 @@ def deplacement_world_SEIR(world,x,y,coordonnees_origine):
 
         
                 
-
+matrice_infection = np.zeros((10,10))
 matrice_infos_deplacement=[[],[],[]]
-def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_guerison,proba_mort,proba_deplacement,matrice_infos_deplacement, confinement):
+def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_guerison,proba_mort,proba_deplacement,matrice_infos_deplacement, confinement, matrice_infection):
     '''
     Hypothese: les probabilites sont sous formes de pourcentages
     
@@ -443,7 +443,7 @@ def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_gueriso
         - si confinement = 2: il n'y a aucune chance que les individus se deplacent
     
     '''
-    
+  
     
     #matrice_infos_deplacement de la forme [[coordonnees_origine],[coordonnees_cible],[nb_tours_restants]]
     
@@ -454,8 +454,9 @@ def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_gueriso
     # coordonnees_origine[i], coordonnees_cible[i] ou nb_tours_restants[i]
     # on récupère les informations d'un individu en déplacement
     
+
     
-    if confinement == 1:
+    if confinement == 1: 
         
         proba_deplacement = proba_deplacement / 10
     
@@ -508,6 +509,8 @@ def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_gueriso
                                     
                                     if (proba<=proba_transmission):
                                         world[y][x]=2 # L'individu est contaminé non infectieux (E)
+                                        matrice_infection[y_coord][x_coord]= matrice_infection[y_coord][x_coord] + 1
+                                        
                         
                         else:
                             
@@ -529,10 +532,12 @@ def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_gueriso
                                             
                                     if (proba<=((proba_guerison+proba_mort)/2)): # Pour R, moyenne guérison et mort pour l'instant
                                         world[y][x]=4 # L'individu est guérri ou mort (R)
+      
     
     
     
-    
+    print("Voici la matrice_infection")
+    print(matrice_infection)
     
     # On regarde si des individus ont un nombre de tours restants en déplacement=0
     # Si c'est le cas on les remets à leus coordonnees d'origine
@@ -567,7 +572,7 @@ def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_gueriso
     return world,matrice_infos_deplacement
                 
                 
-def multi_evolution_world_SEIR(nb_tours,world,proba_incubation,proba_transmission,proba_guerison,proba_mort,proba_deplacement,matrice_infos_deplacement):
+def multi_evolution_world_SEIR(nb_tours,world,proba_incubation,proba_transmission,proba_guerison,proba_mort,proba_deplacement,matrice_infos_deplacement, confinement, matrice_infection):
     '''
     Renvoit un monde après plusieurs itérations SEIR
     '''
@@ -576,9 +581,10 @@ def multi_evolution_world_SEIR(nb_tours,world,proba_incubation,proba_transmissio
 
     for i in range(nb_tours):
         
-        world,matrice_infos_deplacement=evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_guerison,proba_mort,proba_deplacement,matrice_infos_deplacement)
+        world,matrice_infos_deplacement=evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_guerison,proba_mort,proba_deplacement,matrice_infos_deplacement, confinement, matrice_infection)
         print("\nTour :",i+1,"\n")
         affiche_monde(world)
+        affiche_monde(matrice_infection)
         
     return world
 
@@ -609,8 +615,18 @@ multi_evolution_world_SEIR(10,monde_test,proba_incubation,proba_transmission,pro
 # MOYENNE DE COURBES
 
 
+
+monde_test=[[1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
+ [3, 1, 1, 1, 1, 0, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 3, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+ [0, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [0, 1, 1, 1, 0, 1, 1, 0, 1, 1],
+ [0, 1, 1, 1, 1, 1, 1, 2, 1, 0],
+ [1, 1, 0, 1, 1, 1, 1, 1, 1, 1],
+ [0, 1, 1, 1, 0, 0, 1, 1, 0, 1]]
+multi_evolution_world_SEIR(100,monde_test,26,46,50,10,40,matrice_infos_deplacement,0,matrice_infection)
+
 '''
-
-
-
 
