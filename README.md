@@ -32,16 +32,19 @@ Pendant la semaine des vacances, nous avons discuté sur le modèle qu'on allait
 C'est pendant la 5e semaine qu'on a commencé notre code python. On a ainsi impliquer les premières formules sur l'ordinateur en générant plusieurs graphiques.
 
 Voici une première graphique avec populations de départ S=80% E=10% I=10% R=0%:
+
 Paramètres α = 0.4, β = 0.4, γ = 0.1
 
 ![](https://www.linkpicture.com/q/image_2023-04-02_173357243.png)
  
 Une deuxième graphique avec populations de départ S=50% E=10% I=40% R=0%:
+
 Paramètres α = 0.9, β = 0.4, γ = 0.3
 
 ![](https://www.linkpicture.com/q/image_2023-04-02_175833294.png)
 
 Une troisième graphique avec populations de départ S=75% E=10% I=15% R=0%:
+
 Paramètres α = 0.3, β = 0.8, γ = 0.5
 
 ![](https://www.linkpicture.com/q/image_2023-04-02_175439863.png)
