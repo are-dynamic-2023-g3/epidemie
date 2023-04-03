@@ -16,13 +16,10 @@ POUR L'INTERFACE GRAPHIQUE IL FAUT EXECUTER tkinter_projet.py
 β = beta (taux de transmission)
 γ = gamma (taux de guérison + mortalité)
 μ = mu (taux de mortalité) #(pas utilisé ici)
-
 S = personnes saines (taux entre 0 et 1)
 E = personnes infectées non infectieuses (taux entre 0 et 1)
 I = personnes infectées infectieusess (taux entre 0 et 1)
 R = personnes retirées guéries ou mortes (taux entre 0 et 1)
-
-
 '''
 
 
@@ -182,7 +179,6 @@ def generate_world_SEIR(nb_S:int, nb_E:int, nb_I:int, nb_R:int):
     "nb_I" individus I, "nb_R" individus R
     
     Dans monde 2D :
-
     Espace innocupé = 0
     Personne saine = 1 := S
     Personne infectée non infectieuse = 2 := E
@@ -334,7 +330,6 @@ def distance(world,x,y):
     
     Renvoit la liste des coordonnes des points voisins du
     point (x,y) dans le monde "world", en excluant les emplacements vides
-
     '''
     liste_coordonnees=[]
     
@@ -352,7 +347,6 @@ def zero_voisin(world,x,y):
     
     Verifie s'il existe un espace vide autour d'un individu 
     point (x,y) dans le monde "world", en excluant les emplacements vides
-
     '''
     
     for j in range(len(world)):
@@ -383,13 +377,12 @@ def coordonnees_zero(world,coordonnees_origine):
 
 
 
-    
+
 
 def deplacement_world_SEIR(world,x,y,coordonnees_origine):
     '''
     Hypothese : verifiée à l'appel, l'individu est au bord d'un rassemblement et il
     y a au minimum une place dispo pour se déplacer
-
     
     Renvoit le monde actualisé après déplacement d'un individu de coordonnees d'origine 
     (x,y), en plus de renvoyer les nouvelles coordonnées (i,j)
@@ -412,7 +405,6 @@ def deplacement_world_SEIR(world,x,y,coordonnees_origine):
     return world,i,j
 
         
-                
 matrice_infection = np.zeros((10,10))
 matrice_infos_deplacement=[[],[],[]]
 def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_guerison,proba_mort,proba_deplacement,matrice_infos_deplacement, confinement, matrice_infection):
@@ -438,9 +430,9 @@ def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_gueriso
     avant de revenir à son point de départ (il peut changer d'état entre temps)
                                             
     La valeur du parametre confinement ne doit prendre que soit 0, soit 1 soit 2:
-        - si confinement = 0: il n'y a pas de confinement
-        - si confinement = 1: il y a un confinement mais il reste des chances pour les individus de se deplacer
-        - si confinement = 2: il n'y a aucune chance que les individus se deplacent
+        - si confinement = "Pas de confinement": il n'y a pas de confinement
+        - si confinement = "Confinement normal": il y a un confinement mais il reste des chances pour les individus de se deplacer
+        - si confinement = "Confinement strict": il n'y a aucune chance que les individus se deplacent
     
     '''
   
@@ -456,11 +448,11 @@ def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_gueriso
     
 
     
-    if confinement == 1: 
+    if (confinement == "Confinement normal"): 
         
         proba_deplacement = proba_deplacement / 10
     
-    if confinement == 2:
+    if (confinement == "Confinement strict"):
         
         proba_deplacement = 0
     
@@ -589,7 +581,6 @@ def multi_evolution_world_SEIR(nb_tours,world,proba_incubation,proba_transmissio
     return world
 
 '''
-
 monde_test=[[1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
  [3, 1, 1, 1, 1, 0, 1, 1, 1, 1],
  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -600,33 +591,14 @@ monde_test=[[1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
  [0, 1, 1, 1, 1, 1, 1, 2, 1, 0],
  [1, 1, 0, 1, 1, 1, 1, 1, 1, 1],
  [0, 1, 1, 1, 0, 0, 1, 1, 0, 1]]
-
 proba_incubation=50
 proba_transmission=30
 proba_guerison=30
 proba_mort=20
 proba_deplacement=5
-
 multi_evolution_world_SEIR(10,monde_test,proba_incubation,proba_transmission,proba_guerison,proba_mort,proba_deplacement,matrice_infos_deplacement)
 
 
-
-# LOI DES GRANDS NOMBRES
-# MOYENNE DE COURBES
-
-
-
-monde_test=[[1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
- [3, 1, 1, 1, 1, 0, 1, 1, 1, 1],
- [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
- [1, 1, 1, 1, 3, 1, 1, 1, 1, 1],
- [1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
- [0, 1, 1, 1, 1, 1, 1, 1, 1, 1],
- [0, 1, 1, 1, 0, 1, 1, 0, 1, 1],
- [0, 1, 1, 1, 1, 1, 1, 2, 1, 0],
- [1, 1, 0, 1, 1, 1, 1, 1, 1, 1],
- [0, 1, 1, 1, 0, 0, 1, 1, 0, 1]]
-multi_evolution_world_SEIR(100,monde_test,26,46,50,10,40,matrice_infos_deplacement,0,matrice_infection)
+multi_evolution_world_SEIR(100,monde_test,26,46,50,10,40,matrice_infos_deplacement,"Pas de confinement",matrice_infection)
 
 '''
-
