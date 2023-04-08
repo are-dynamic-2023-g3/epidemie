@@ -5,7 +5,6 @@ import tkinter as Tk
 from matplotlib import pyplot as plt
 
 
-
 '''
 POUR L'INTERFACE GRAPHIQUE IL FAUT EXECUTER tkinter_projet.py
 '''
@@ -404,7 +403,10 @@ def deplacement_world_SEIR(world,x,y,coordonnees_origine):
 
     return world,i,j
 
-        
+
+
+
+
 matrice_infection = np.zeros((10,10))
 matrice_infos_deplacement=[[],[],[]]
 def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_guerison,proba_mort,proba_deplacement,matrice_infos_deplacement, confinement, matrice_infection):
@@ -476,7 +478,7 @@ def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_gueriso
                     coordonnees_origine.append((x,y))
                     coordonnees_cible.append((x_nouv,y_nouv))
                     
-                    nb_tours=np.random.randint(1,10)
+                    nb_tours=np.random.randint(1,7) # 7 exclu
                     nb_tours_restants.append(nb_tours)
                 
                 # Sinon on regarde si l'individu change d'état
@@ -501,7 +503,8 @@ def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_gueriso
                                     
                                     if (proba<=proba_transmission):
                                         world[y][x]=2 # L'individu est contaminé non infectieux (E)
-                                        matrice_infection[y_coord][x_coord]= matrice_infection[y_coord][x_coord] + 1
+                                        matrice_infection[y][x]= matrice_infection[y][x] + 1
+                                        break
                                         
                         
                         else:
@@ -526,10 +529,6 @@ def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_gueriso
                                         world[y][x]=4 # L'individu est guérri ou mort (R)
       
     
-    
-    
-    print("Voici la matrice_infection")
-    print(matrice_infection)
     
     # On regarde si des individus ont un nombre de tours restants en déplacement=0
     # Si c'est le cas on les remets à leus coordonnees d'origine
@@ -574,13 +573,25 @@ def multi_evolution_world_SEIR(nb_tours,world,proba_incubation,proba_transmissio
     for i in range(nb_tours):
         
         world,matrice_infos_deplacement=evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_guerison,proba_mort,proba_deplacement,matrice_infos_deplacement, confinement, matrice_infection)
-        print("\nTour :",i+1,"\n")
+        print("\nTour :",i+1,", Monde :\n")
         affiche_monde(world)
+        print("Matrice infection :")
         affiche_monde(matrice_infection)
         
     return world
 
+
+
+
 '''
+proba_incubation=50
+proba_transmission=30
+proba_guerison=30
+proba_mort=20
+proba_deplacement=5
+
+
+
 monde_test=[[1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
  [3, 1, 1, 1, 1, 0, 1, 1, 1, 1],
  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -591,14 +602,12 @@ monde_test=[[1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
  [0, 1, 1, 1, 1, 1, 1, 2, 1, 0],
  [1, 1, 0, 1, 1, 1, 1, 1, 1, 1],
  [0, 1, 1, 1, 0, 0, 1, 1, 0, 1]]
-proba_incubation=50
-proba_transmission=30
-proba_guerison=30
-proba_mort=20
-proba_deplacement=5
-multi_evolution_world_SEIR(10,monde_test,proba_incubation,proba_transmission,proba_guerison,proba_mort,proba_deplacement,matrice_infos_deplacement)
 
 
-multi_evolution_world_SEIR(100,monde_test,26,46,50,10,40,matrice_infos_deplacement,"Pas de confinement",matrice_infection)
+multi_evolution_world_SEIR(10,monde_test,26,46,50,10,40,matrice_infos_deplacement,"Pas de confinement",matrice_infection)
 
 '''
+
+# Confinement / Déplacement
+# Simulation / Graphiques
+# Infections
