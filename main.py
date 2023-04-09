@@ -163,33 +163,34 @@ def affiche_monde(world:list):
 
 
 
-def generate_world_SEIR(nb_S:int, nb_E:int, nb_I:int, nb_R:int):
+def generate_world_SEIR(nb_S:int, nb_E:int, nb_I:int, nb_R1:int, nb_R2:int):
     '''
     Hypotheses:
         
     Les parametres sont le nombre d'individus de chaque groupe
-    nb_S+nb_E+nb_I+nb_R <= 100
+    nb_S+nb_E+nb_I+nb_R1+nb_R2 <= 100
     
-    SI nb_S+nb_E+nb_I+nb_R = 100 -> 0 espace vide
+    SI nb_S+nb_E+nb_I+nb_R1+nb_R2 = 100 -> 0 espace vide
     
     
     
     Crée et renvoit un monde 2D 10*10 avec "nb_S" individus S, "nb_E" individus E,
-    "nb_I" individus I, "nb_R" individus R
+    "nb_I" individus I, "nb_R1" individus R1, "nb_R2" individus R2
     
     Dans monde 2D :
     Espace innocupé = 0
     Personne saine = 1 := S
     Personne infectée non infectieuse = 2 := E
     Personne infectée infectieuse = 3 := I
-    Personne retirée = 4 := R
+    Personne retirée guérie = 4 := R1
+    Personne retirée morte = 5 := R2
     
     '''
     world=np.zeros((10,10))
     
     
-    probas_individus=[nb_S,nb_E,nb_I,nb_R] #Ce tableau change pas
-    nombre_individus=[nb_S,nb_E,nb_I,nb_R] #Ce tableau change
+    probas_individus=[nb_S,nb_E,nb_I,nb_R1,nb_R2] #Ce tableau change pas
+    nombre_individus=[nb_S,nb_E,nb_I,nb_R1,nb_R2] #Ce tableau change
     
     boucler=True
     
@@ -203,17 +204,18 @@ def generate_world_SEIR(nb_S:int, nb_E:int, nb_I:int, nb_R:int):
                 nb_S=nombre_individus[0]
                 nb_E=nombre_individus[1]
                 nb_I=nombre_individus[2]
-                nb_R=nombre_individus[3]
+                nb_R1=nombre_individus[3]
+                nb_R2=nombre_individus[4]
                 
                 if (world[y][x]==0):
                 
-                    if (nb_S!=0 or nb_E!=0 or nb_I!=0 or nb_R!=0):
+                    if (nb_S!=0 or nb_E!=0 or nb_I!=0 or nb_R1!=0 or nb_R2!=0):
                         
                         
-                        type_individu=np.random.randint(1,5) # 5 exclu
+                        type_individu=np.random.randint(1,6) # 6 exclu
                         
                         while (nombre_individus[type_individu-1]==0):
-                                type_individu=np.random.randint(1,5) # 5 exclu
+                                type_individu=np.random.randint(1,6) # 6 exclu
                         
                         proba = np.random.randint(0,101) # 101 exclu
                         
@@ -222,7 +224,7 @@ def generate_world_SEIR(nb_S:int, nb_E:int, nb_I:int, nb_R:int):
                             nombre_individus[type_individu-1]=nombre_individus[type_individu-1]-1
                 
                 
-                if (nb_S==0 and nb_E==0 and nb_I==0 and nb_R==0):
+                if (nb_S==0 and nb_E==0 and nb_I==0 and nb_R1==0 and nb_R2==0):
                     boucler=False
 
     return world
@@ -234,7 +236,7 @@ def generate_random_world_SEIR():
     '''
     Appelle generate_world_SEIR avec des parametres aléatoires et le renvoit
     
-    On garde toujours un nombre de personnes retirées = 0
+    On garde toujours un nombre de personnes retirées guéries ou mortes = 0
     à la création du monde aléatoire
     
     '''
@@ -246,23 +248,23 @@ def generate_random_world_SEIR():
     nb_I=100-(nb_espaces_vide+nb_S+nb_E)
     
     
-    return generate_world_SEIR(nb_S,nb_E,nb_I,0)
+    return generate_world_SEIR(nb_S,nb_E,nb_I,0,0)
 
 
-#print(generate_world_SEIR(40,10,0,0))
+#print(generate_world_SEIR(40,10,0,0,0))
 #print(generate_random_world_SEIR())
 
 
 
-def generate2_world_SEIR(nb_S:int, nb_E:int, nb_I:int, nb_R:int):
+def generate2_world_SEIR(nb_S:int, nb_E:int, nb_I:int, nb_R1:int, nb_R2:int):
     '''
     Version 2 de generate_world_SEIR qui renvoit un monde 30*30 (900 individus)
     '''
     world=np.zeros((30,30))
     
     # On met les probas sur une échelle de 0 à 100
-    probas_individus=[(nb_S/900)*100,(nb_E/900)*100,(nb_I/900)*100,(nb_R/900)*100] #Ce tableau change pas
-    nombre_individus=[nb_S,nb_E,nb_I,nb_R] #Ce tableau change
+    probas_individus=[(nb_S/900)*100,(nb_E/900)*100,(nb_I/900)*100,(nb_R1/900)*100,(nb_R2/900)*100] #Ce tableau change pas
+    nombre_individus=[nb_S,nb_E,nb_I,nb_R1,nb_R2] #Ce tableau change
     
     boucler=True
     while (boucler==True) :
@@ -275,17 +277,18 @@ def generate2_world_SEIR(nb_S:int, nb_E:int, nb_I:int, nb_R:int):
                 nb_S=nombre_individus[0]
                 nb_E=nombre_individus[1]
                 nb_I=nombre_individus[2]
-                nb_R=nombre_individus[3]
+                nb_R1=nombre_individus[3]
+                nb_R2=nombre_individus[4]
                 
                 if (world[y][x]==0):
                 
-                    if (nb_S!=0 or nb_E!=0 or nb_I!=0 or nb_R!=0):
+                    if (nb_S!=0 or nb_E!=0 or nb_I!=0 or nb_R1!=0 or nb_R2!=0):
                         
                         
-                        type_individu=np.random.randint(1,5) # 5 exclu
+                        type_individu=np.random.randint(1,6) # 6 exclu
                         
                         while (nombre_individus[type_individu-1]==0):
-                                type_individu=np.random.randint(1,5) # 5 exclu
+                                type_individu=np.random.randint(1,6) # 6 exclu
                         
                         proba = np.random.randint(0,101) # 101 exclu
                         
@@ -294,7 +297,7 @@ def generate2_world_SEIR(nb_S:int, nb_E:int, nb_I:int, nb_R:int):
                             nombre_individus[type_individu-1]=nombre_individus[type_individu-1]-1
                 
                 
-                if (nb_S==0 and nb_E==0 and nb_I==0 and nb_R==0):
+                if (nb_S==0 and nb_E==0 and nb_I==0 and nb_R1==0 and nb_R2==0):
                     boucler=False
         
     return world
@@ -313,7 +316,7 @@ def generate2_random_world_SEIR():
     nb_I=900-(nb_espaces_vide+nb_S+nb_E)
     
     
-    return generate2_world_SEIR(nb_S,nb_E,nb_I,0)
+    return generate2_world_SEIR(nb_S,nb_E,nb_I,0,0)
 
 
 
@@ -406,15 +409,16 @@ def deplacement_world_SEIR(world,x,y,coordonnees_origine):
 
 
 
-
 matrice_infection = np.zeros((10,10))
 matrice_infos_deplacement=[[],[],[]]
-def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_guerison,proba_mort,proba_deplacement,matrice_infos_deplacement, confinement, matrice_infection):
+tab_infectes_pendant_deplacement=[0]
+def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_guerison,proba_mort,proba_deplacement,
+                         matrice_infos_deplacement, confinement, matrice_infection,tab_infectes_pendant_deplacement):
     '''
     Hypothese: les probabilites sont sous formes de pourcentages
     
     Effectue un tour du monde et met à jour l'etat de chaque individu
-    Renvoit ensuite le nouveau monde, en plus de la matrice_infos_deplacement
+    Renvoit ensuite le nouveau monde
     
     
     
@@ -452,18 +456,24 @@ def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_gueriso
     
     if (confinement == "Confinement normal"): 
         
-        proba_deplacement = proba_deplacement / 10
+        # En cas de confinement normal, on considère qu'il y a toujours un % de chances
+        # qu'un individu bouge en enfraignant le confinement (le % est faible)
+        proba_deplacement = proba_deplacement/15
+        
     
     if (confinement == "Confinement strict"):
         
         proba_deplacement = 0
     
     
+    nb_infectes_pendant_tour=0
+    
+    
     for y in range(len(world)):
         for x in range(len(world[y])):    
             
     
-            if (world[y][x]!=0):
+            if (world[y][x]!=0 and world[y][x]!=5):
             
                 places_pour_se_deplacer = coordonnees_zero(world,coordonnees_origine)
     
@@ -490,9 +500,8 @@ def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_gueriso
                         
                         if (world[y][x]==1): # On regarde un individu sain (S)
                             
+                            # On récupère les coordonnées des ses individus voisins
                             for coord in liste_coordonnees:
-                                
-                                
                                 
                                 x_coord = coord[0]
                                 y_coord = coord[1]
@@ -504,6 +513,10 @@ def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_gueriso
                                     if (proba<=proba_transmission):
                                         world[y][x]=2 # L'individu est contaminé non infectieux (E)
                                         matrice_infection[y][x]= matrice_infection[y][x] + 1
+                                        
+                                        if ((x,y) in coordonnees_cible):
+                                            nb_infectes_pendant_tour=nb_infectes_pendant_tour+1
+                                            
                                         break
                                         
                         
@@ -522,48 +535,98 @@ def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_gueriso
                                 
                                 if (world[y][x]==3): # On regarde un individu infectieux (I)
                                     
+                                    guerri_ou_mort=np.random.randint(1,3) # on obtient 1 ou 2
                                 
-                                    proba=np.random.randint(1,101)
-                                            
-                                    if (proba<=((proba_guerison+proba_mort)/2)): # Pour R, moyenne guérison et mort pour l'instant
-                                        world[y][x]=4 # L'individu est guérri ou mort (R)
+                                    if (guerri_ou_mort==1): # On fait un tirage pour savoir si l'individu guérri ou pas
+                                        
+                                        proba=np.random.randint(1,101)
+                                                
+                                        if (proba<=proba_guerison):
+                                            world[y][x]=4 # L'individu est guérri (R1)
+                                    
+                                    elif (guerri_ou_mort==2): # On fait un tirage pour savoir si l'individu meurt ou pas
+                                        
+                                        proba=np.random.randint(1,101)
+                                                
+                                        if (proba<=proba_mort): # Pour R, moyenne guérison et mort pour l'instant
+                                            world[y][x]=5 # L'individu est mort (R2)
       
     
-    
-    # On regarde si des individus ont un nombre de tours restants en déplacement=0
-    # Si c'est le cas on les remets à leus coordonnees d'origine
+
+        
     if (len(nb_tours_restants)>0):
-    
+        
         l=len(nb_tours_restants)
         i=0
         while (i<l) :
-            if (nb_tours_restants[i]==0):
+
+            x=coordonnees_cible[i][0]
+            y=coordonnees_cible[i][1]
+                
+                
+            # On regarde si des individus sont morts pendant un déplacement  
+            # Si c'est le cas on retire leurs infos de 'matrice_infos_deplacement'
+            if (world[y][x]==5):
+                coordonnees_origine.pop(i)
+                coordonnees_cible.pop(i)
+                nb_tours_restants.pop(i)
+                    
+                l=len(nb_tours_restants)
+                    
+                
+            # On regarde si des individus ont un nombre de tours restants en déplacement=0
+            # Si c'est le cas on les remets à leus coordonnees d'origine
+            elif (nb_tours_restants[i]==0):
                 (x_origine,y_origine)=coordonnees_origine.pop(i)
                 (x_cible,y_cible)=coordonnees_cible.pop(i)
                 nb_tours_restants.pop(i)
-                
+                        
                 tmp=world[y_cible][x_cible]
                 world[y_cible][x_cible]=0
                 world[y_origine][x_origine]=tmp
-                
+                        
                 l=len(nb_tours_restants)
             else :
                 i=i+1
-    
-    
-    # On réduit de 1 le nombre de tours restants
-    if (len(nb_tours_restants)>0):
-        for i in range(len(nb_tours_restants)):
-            nb_tours_restants[i]=nb_tours_restants[i]-1
+        
+        
+    # Dans le cas où il n'y a pas de confinement strict, on met à jour les informations
+    # de deplacement
+    if (confinement != "Confinement strict"):
+        
+        if (len(nb_tours_restants)>0):
+            for i in range(len(nb_tours_restants)):
+                
+                # On réduit de 1 le nombre de tours restants
+                if (confinement == "Pas de confinement"):
+                    nb_tours_restants[i]=nb_tours_restants[i]-1
+                
+                
+                # Si il y a un confinement normal, on fait l'hypothèse qu'il ya 80% de chance
+                # qu'un individu en déplacement ne voit pas la durée de son déplacement réduite
+                elif (confinement == "Confinement normal"):
+                    chance=np.random.randint(1,101)
+                    if (chance<=20):
+                        nb_tours_restants[i]=nb_tours_restants[i]-1
         
         
     #print(coordonnees_origine,"\n")    
     #print(coordonnees_cible,"\n")    
     #print(nb_tours_restants,"\n")
-    return world,matrice_infos_deplacement
+    
+    
+    # On met à jour l'historique des individus infectés pendant un déplacement
+    l_tab_infectes_pendant_deplacement=len(tab_infectes_pendant_deplacement)
+    
+    nb_precedant=tab_infectes_pendant_deplacement[l_tab_infectes_pendant_deplacement-1]
+    tab_infectes_pendant_deplacement.append(nb_precedant+nb_infectes_pendant_tour)
+    
+    
+    return world
                 
                 
-def multi_evolution_world_SEIR(nb_tours,world,proba_incubation,proba_transmission,proba_guerison,proba_mort,proba_deplacement,matrice_infos_deplacement, confinement, matrice_infection):
+def multi_evolution_world_SEIR(nb_tours,world,proba_incubation,proba_transmission,proba_guerison,proba_mort,proba_deplacement,
+                               matrice_infos_deplacement, confinement, matrice_infection,tab_infectes_pendant_deplacement):
     '''
     Renvoit un monde après plusieurs itérations SEIR
     '''
@@ -572,7 +635,7 @@ def multi_evolution_world_SEIR(nb_tours,world,proba_incubation,proba_transmissio
 
     for i in range(nb_tours):
         
-        world,matrice_infos_deplacement=evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_guerison,proba_mort,proba_deplacement,matrice_infos_deplacement, confinement, matrice_infection)
+        world=evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_guerison,proba_mort,proba_deplacement,matrice_infos_deplacement, confinement, matrice_infection,tab_infectes_pendant_deplacement)
         print("\nTour :",i+1,", Monde :\n")
         affiche_monde(world)
         print("Matrice infection :")
@@ -604,10 +667,6 @@ monde_test=[[1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
  [0, 1, 1, 1, 0, 0, 1, 1, 0, 1]]
 
 
-multi_evolution_world_SEIR(10,monde_test,26,46,50,10,40,matrice_infos_deplacement,"Pas de confinement",matrice_infection)
+multi_evolution_world_SEIR(10,monde_test,26,46,50,30,40,matrice_infos_deplacement,"Pas de confinement",matrice_infection,tab_infectes_pendant_deplacement)
 
 '''
-
-# Confinement / Déplacement
-# Simulation / Graphiques
-# Infections
