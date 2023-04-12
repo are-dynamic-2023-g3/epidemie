@@ -74,3 +74,35 @@ De plus, voici 3 instants du simulation avec plusieurs itérations:
 ![](https://www.linkpicture.com/q/image_2023-04-03_023834588.png)
 
 ![](https://www.linkpicture.com/q/image_2023-04-03_024012020.png)
+
+## Huitième semaine 27/03 --> 02/04
+Pendant la huitième semaine, 3 grands changements ont été fait: 
+-Tout d'abord, l'écran d'accueil a été modifié. Il est maintenant possible de créer un monde avec 900 individus, voici un extrait:
+
+![](https://www.linkpicture.com/q/image_2023-04-12_195307266.png)
+
+-Des majeures changements ont été fait sur le déplacement des individus. Voici 2 extraits résumant les changements:
+
+![](https://www.linkpicture.com/q/image_2023-04-12_201750438.png)
+
+![]()
+
+![]()
+
+![]()
+
+-D'ailleurs, il est maintenant possible de tout itérer d'un coup, ce qui nous aide a gagner du temps et automatiser les coups. Voici les deux étapes de l'itérisation d'un coup:
+
+![](https://www.linkpicture.com/q/image_2023-04-12_200542053.png)
+
+![](https://www.linkpicture.com/q/image_2023-04-12_201141739.png)
+
+## Neuvième semaine 03/04 --> 09/04
+Pendant la neuvième semaine, les plus grands modifications ont été faits: 
+-Tout d'abord, on a départagé les guérris et les morts. La sous-population total R qu'on avait a été divisé en 2. Maintenant, on a R1 qui représente les guéris et R2 qui représente les morts.
+
+-Un bouton qui réinitialise les itérations et le monde d'origine vierge avant tous les itérations a été ajouté. 
+
+-
+
+
