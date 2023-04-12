@@ -103,6 +103,12 @@ Pendant la neuvième semaine, les plus grands modifications ont été faits:
 
 -Un bouton qui réinitialise les itérations et le monde d'origine vierge avant tous les itérations a été ajouté. 
 
--
+-Une matrice d'infections qui montre le nombre d'infections par case a été également ajoté avec un bouton qui change le type de monde(normal/infection).
+
+-Même si le graphe SEIR reste comme il est, un graphique avancé a été ajouté. Cet nouvel graphe montre maintenant l'évolution des S, E, I, R différenciés(Pour R1 et R2)(également pour la population totale), ainsi que l'ajout d'un bouton qui permet a changer les graphiques.
+
+-Un deuxième nouvel graphique sur les données de déplacement des individus a été ajouté. Pour les sous populations S E I R1 on a l'évolution du nombre d'individus de chaque sous-population en déplacement pendant le tour, et en plus en gris on a l'évolution du nombre d'individus contaminés pendant un déplacement depuis le début. 
+
+
 
 
