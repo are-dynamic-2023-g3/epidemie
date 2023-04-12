@@ -85,11 +85,11 @@ Pendant la huitième semaine, 3 grands changements ont été fait:
 
 ![](https://www.linkpicture.com/q/image_2023-04-12_201750438.png)
 
-![]()
+![](https://www.linkpicture.com/q/image_2023-04-12_214140529.png)
 
-![]()
+![](https://www.linkpicture.com/q/image_2023-04-12_214256373.png)
 
-![]()
+![](https://www.linkpicture.com/q/image_2023-04-12_214355100.png)
 
 -D'ailleurs, il est maintenant possible de tout itérer d'un coup, ce qui nous aide a gagner du temps et automatiser les coups. Voici les deux étapes de l'itérisation d'un coup:
 
