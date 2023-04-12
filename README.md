@@ -109,6 +109,20 @@ Pendant la neuvième semaine, les plus grands modifications ont été faits:
 
 -Un deuxième nouvel graphique sur les données de déplacement des individus a été ajouté. Pour les sous populations S E I R1 on a l'évolution du nombre d'individus de chaque sous-population en déplacement pendant le tour, et en plus en gris on a l'évolution du nombre d'individus contaminés pendant un déplacement depuis le début. 
 
+-Maintenant passons aux exemples: 
 
+Partons d'une monde stable au début:
+
+![](https://www.linkpicture.com/q/image_2023-04-12_214843676.png)
+
+Itérons cet monde pour 100 fois. Voici les nouveaux résultats avec les graphiques normals.
+
+![](https://www.linkpicture.com/q/image_2023-04-12_215211116.png)
+
+Voici les nouveaux résultats avec les graphiques avancés de cette semaine.
+
+![](https://www.linkpicture.com/q/image_2023-04-12_215351611.png)
+
+Maintenant, passons à l'écran de p
 
 
