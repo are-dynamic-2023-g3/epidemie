@@ -1,4 +1,4 @@
-
+#000000
 # Modèle SEIR
 ## Introduction / Première semaine 6/02 --> 12/02
 Pendant la prémière séance, nous avons discuté sur plusieurs sujets qui nous intéressaient et nous avons décidé de nous baser sur l'épidémiologie, qui est à la fois un sujet intéressant et dont la modélisation pourrait aussi être intéressante. On a alors décidé de se concentrer sur le modèle SEIR, dérivé du modèle SIR. Voici une simple représentation du modèle:
