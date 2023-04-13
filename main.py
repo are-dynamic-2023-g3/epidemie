@@ -11,10 +11,26 @@ POUR L'INTERFACE GRAPHIQUE IL FAUT EXECUTER tkinter_projet.py
 
 
 '''
+Contient :
+    - Définitions des équations SEIR et graphes à partir de ces équations
+    - Définitions de création de mondes
+    - Définition principale de l'itération d'un monde et ses définitions secondaires
+'''
+
+
+
+
+
+
+''' PARTIE EQUATIONS SEIR ET GRAPHES SEIR'''
+
+
+
+'''
 α = alpha (taux d'incubation)
 β = beta (taux de transmission)
-γ = gamma (taux de guérison + mortalité)
-μ = mu (taux de mortalité) #(pas utilisé ici)
+γ = gamma (taux de guérison)
+μ = mu (taux de mortalité)
 S = personnes saines (taux entre 0 et 1)
 E = personnes infectées non infectieuses (taux entre 0 et 1)
 I = personnes infectées infectieusess (taux entre 0 et 1)
@@ -23,51 +39,36 @@ R = personnes retirées guéries ou mortes (taux entre 0 et 1)
 
 
 
-''' PARTIE EQUATIONS SEIR ET GRAPHES SEIR'''
-
-
-
-nb_temps=60
-
-alpha=0.3
-beta=0.8
-gamma=0.5
-mu=0.05 #(pas utilisé ici)
-
-S=0.75
-E=0.1
-I=0.15
-R=0
-population=1
-
-#S+E+I+R=1
-
-def dS(beta,S,I,mu):
+def dS(beta,S,I,mu,population):
     '''
     Equation derivée parametre S modele SEIR
+    Utilisée dans 'setup_tab_param'
     '''
-    return -beta*S*I
+    return -beta*S*(I/population)
 
-def dE(beta,S,I,alpha,E,mu):
+def dE(beta,S,I,alpha,E,mu,population):
     '''
     Equation derivée parametre E modele SEIR
+    Utilisée dans 'setup_tab_param'
     '''
-    return beta*S*I-alpha*E
+    return beta*S*(I/population)-alpha*E
 
 def dI(I,alpha,E,gamma,mu):
     '''
     Equation derivée parametre I modele SEIR
+    Utilisée dans 'setup_tab_param'
     '''
     return alpha*E-gamma*I
 
 def dR(I,gamma,mu,R):
     '''
     Equation derivée parametre R modele SEIR
+    Utilisée dans 'setup_tab_param'
     '''
     return gamma*I
 
 
-def setup_tab_param(S:float, E:float, I:float, R:float,alpha,beta,gamma,mu,nb_temps,population):
+def setup_tab_param(S, E, I, R,alpha,beta,gamma,mu,nb_temps:int,population):
     '''
     Hypothese:
     Parametres en taux entre 0 et 1
@@ -75,6 +76,7 @@ def setup_tab_param(S:float, E:float, I:float, R:float,alpha,beta,gamma,mu,nb_te
     Renvoie les donnees du modele SEIR sous forme de tableaux, 
     avec un modele appliqué "nb_temps" fois
     
+    Utilisée dans 'show_plot_SEIR' et dans le tkinter (écran de simulation)
     '''
     
     
@@ -88,10 +90,10 @@ def setup_tab_param(S:float, E:float, I:float, R:float,alpha,beta,gamma,mu,nb_te
     
     for i in range(nb_temps):
         
-        S_nouveau=S+dS(beta,S,I,mu)
+        S_nouveau=S+dS(beta,S,I,mu,population)
         tab_S.append(S_nouveau)
         
-        E_nouveau=E+dE(beta,S,I,alpha,E,mu)
+        E_nouveau=E+dE(beta,S,I,alpha,E,mu,population)
         tab_E.append(E_nouveau)
         
         I_nouveau=I+dI(I,alpha,E,gamma,mu)
@@ -114,7 +116,7 @@ def setup_tab_param(S:float, E:float, I:float, R:float,alpha,beta,gamma,mu,nb_te
     return tab_S,tab_E,tab_I,tab_R,tab_population,tab_temps
 
 
-def show_plot_SEIR(S:float, E:float, I:float, R:float,alpha,beta,gamma,mu,nb_temps,population):
+def show_plot_SEIR(S, E, I, R,alpha,beta,gamma,mu,nb_temps:int,population):
     '''
     Hypothese:
     Parametres en taux entre 0 et 1
@@ -130,16 +132,43 @@ def show_plot_SEIR(S:float, E:float, I:float, R:float,alpha,beta,gamma,mu,nb_tem
     plt.plot(params[5], np.array(params[1])*100, color = 'green') #E
     plt.plot(params[5], np.array(params[2])*100, color = 'orange') #I
     plt.plot(params[5], np.array(params[3])*100, color = 'red') #R
-    #plt.plot(params[5], np.array(params[4])*100, color = 'purple') #Population
+    plt.plot(params[5], np.array(params[4])*100, color = 'black') #Population
     
     plt.ylabel('Pourcentage de population')
     plt.xlabel('Temps (unité arbitraire)')
     
     plt.show()
         
+    
+# Valeurs de tests
+nb_temps=60
+
+alpha=0.3
+beta=0.8
+gamma=0.5
+mu=0.05
+
+S=0.75
+E=0.1
+I=0.15
+R=0
+population=1
+
+#S+E+I+R=1 ici
         
 #show_plot_SEIR(S,E,I,R,alpha,beta,gamma,mu,nb_temps,population)   
         
+
+
+
+     
+
+
+
+
+
+
+''' PARTIE MONDE SEIR SPATIAL '''
 
 
 
@@ -149,16 +178,11 @@ def affiche_monde(world:list):
     
     '''
     Affiche un tableau python de type list de facon plus propre et lisible
+    
+    Utilisée surtout pendant les tests 
     '''
     
-    print(np.array(world))         
-
-
-
-
-
-
-''' PARTIE MONDE SEIR SPATIAL '''
+    print(np.array(world))    
 
 
 
@@ -178,13 +202,15 @@ def generate_world_SEIR(nb_S:int, nb_E:int, nb_I:int, nb_R1:int, nb_R2:int):
     "nb_I" individus I, "nb_R1" individus R1, "nb_R2" individus R2
     
     Dans monde 2D :
-    Espace innocupé = 0
+    Espace innocupé := 0
     Personne saine = 1 := S
     Personne infectée non infectieuse = 2 := E
     Personne infectée infectieuse = 3 := I
     Personne retirée guérie = 4 := R1
     Personne retirée morte = 5 := R2
     
+    
+    Utilisée dans 'generate_random_world_SEIR' et dans le tkinter
     '''
     world=np.zeros((10,10))
     
@@ -192,11 +218,17 @@ def generate_world_SEIR(nb_S:int, nb_E:int, nb_I:int, nb_R1:int, nb_R2:int):
     probas_individus=[nb_S,nb_E,nb_I,nb_R1,nb_R2] #Ce tableau change pas
     nombre_individus=[nb_S,nb_E,nb_I,nb_R1,nb_R2] #Ce tableau change
     
+    # Pour faire simple : on a un tableau de probas pour chaque type, et on a un tableau avec
+    # le nombre restant d'individus de chaque population
+    
     boucler=True
     
     while (boucler==True) :
         
+        # On arrete de boucler quand les individus de chaque type de nombre_individus = 0,
+        # c'est à dire qu'ils ont tous été placés dans le monde
         
+        # En attendant on parcourt en boucle la matrice du monde
         for y in range(10):
             for x in range(10):
                 
@@ -212,13 +244,16 @@ def generate_world_SEIR(nb_S:int, nb_E:int, nb_I:int, nb_R1:int, nb_R2:int):
                     if (nb_S!=0 or nb_E!=0 or nb_I!=0 or nb_R1!=0 or nb_R2!=0):
                         
                         
+                        # On choisit au hasard un type d'individu
                         type_individu=np.random.randint(1,6) # 6 exclu
                         
+                        # Dans le cas où le nombre d'individus du type = 0, on refait un tirage
                         while (nombre_individus[type_individu-1]==0):
                                 type_individu=np.random.randint(1,6) # 6 exclu
                         
                         proba = np.random.randint(0,101) # 101 exclu
                         
+                        # Selon la proba du type d'individu en question, on regarde si on place ou pas
                         if (proba<=probas_individus[type_individu-1]):
                             world[y][x]=type_individu
                             nombre_individus[type_individu-1]=nombre_individus[type_individu-1]-1
@@ -239,6 +274,7 @@ def generate_random_world_SEIR():
     On garde toujours un nombre de personnes retirées guéries ou mortes = 0
     à la création du monde aléatoire
     
+    Utilisée dans le tkinter
     '''
     
     nb_espaces_vide=np.random.randint(0,59)
@@ -259,6 +295,11 @@ def generate_random_world_SEIR():
 def generate2_world_SEIR(nb_S:int, nb_E:int, nb_I:int, nb_R1:int, nb_R2:int):
     '''
     Version 2 de generate_world_SEIR qui renvoit un monde 30*30 (900 individus)
+    
+    C'est juste un copié/collé de la première version, avec juste quelques calculs 
+    pour les probas en plus
+    
+    Utilisée dans 'generate2_random_world_SEIR' et dans le tkinter
     '''
     world=np.zeros((30,30))
     
@@ -307,6 +348,9 @@ def generate2_random_world_SEIR():
     '''
     Version 2 de generate_random_world_SEIR qui renvoit un monde aléatoire 30*30 (900 individus)
     
+    Egalement quasiment copié/collé de la première version
+    
+    Utilisée dans le tkinter
     '''
     
     nb_espaces_vide=np.random.randint(0,559)
@@ -324,14 +368,14 @@ def generate2_random_world_SEIR():
 
 
 
-
-
-
 def distance(world,x,y):
     '''
-    
     Renvoit la liste des coordonnes des points voisins du
     point (x,y) dans le monde "world", en excluant les emplacements vides
+    
+    La fonction retourne quelque chose de la forme ((x1,y1),(x2,y2),...)
+    
+    Utilisée dans 'evolution_world_SEIR'
     '''
     liste_coordonnees=[]
     
@@ -346,9 +390,14 @@ def distance(world,x,y):
 
 def zero_voisin(world,x,y):
     '''
+    Verifie s'il existe un espace vide autour d'un individu de
+    point (x,y) dans le monde "world", en excluant les emplacements vides.
+    Retourne alors True ou False
     
-    Verifie s'il existe un espace vide autour d'un individu 
-    point (x,y) dans le monde "world", en excluant les emplacements vides
+    Cette fonction nous permet de savoir si un individu est au bord d'un regroupement
+    (sous entendu ça permettra de savoir si il pourra bouger)
+    
+    Utilisée dans 'evolution_world_SEIR'
     '''
     
     for j in range(len(world)):
@@ -362,9 +411,17 @@ def zero_voisin(world,x,y):
     
 def coordonnees_zero(world,coordonnees_origine):
     '''
-    
     Renvoie la liste des coordonnees des espaces vides du monde 'world'
+    Le paramètre "coordonnees_origine" nous permet de regarder si un espace vide
+    était occupé par un individu avant déplacement. Si c'est le cas on considère que l'espace
+    n'est pas vraiment innocupé.
     
+    De plus, si un individu en déplacement meurt, son emplacement d'origine se libère et
+    devient considéré comme innocupé (c'est 'evolution_world_SEIR' qui met ça à jour)
+    
+    La fonction retourne quelque chose de la forme ((x1,y1),(x2,y2),...)
+    
+    Utilisée dans 'deplacement_world_SEIR' et 'evolution_world_SEIR'
     '''
     
     liste_coordonnees = []
@@ -389,6 +446,7 @@ def deplacement_world_SEIR(world,x,y,coordonnees_origine):
     Renvoit le monde actualisé après déplacement d'un individu de coordonnees d'origine 
     (x,y), en plus de renvoyer les nouvelles coordonnées (i,j)
     
+    Utilisée dans 'evolution_world_SEIR'
     '''
     
     places_pour_se_deplacer = coordonnees_zero(world,coordonnees_origine)
@@ -409,37 +467,46 @@ def deplacement_world_SEIR(world,x,y,coordonnees_origine):
 
 
 
-matrice_infection = np.zeros((10,10))
+
+matrice_infection = np.zeros((10,10)) 
+# La matrice du nombre d'infections par case
+
 matrice_infos_deplacement=[[],[],[]]
+# La matrice des infos des déplacements, 3 tableaux dedans :
+#        - un contenant des tuples de coordonnées d'origines d'individus avant déplacement
+#        - un contenant des tuples de coordonnées de destination d'individus après déplacement
+#        - un contenant le nombre de tours restant du déplacement de l'individu
+    
 tab_infectes_pendant_deplacement=[0]
+# Tableau du nombre d'infectés pendant un déplacemet, sa taille est égale au nombre de tours
+# et un tab_infectes_pendant_deplacement[nb_tour] -> nombre d'infectés pendant le "nb_tour"
+    
+    
 def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_guerison,proba_mort,proba_deplacement,
-                         matrice_infos_deplacement, confinement, matrice_infection,tab_infectes_pendant_deplacement):
+                         matrice_infos_deplacement, confinement:str, matrice_infection,tab_infectes_pendant_deplacement):
     '''
     Hypothese: les probabilites sont sous formes de pourcentages
     
     Effectue un tour du monde et met à jour l'etat de chaque individu
     Renvoit ensuite le nouveau monde
     
-    
-    
+
     
     Lors du tour, un individu soit se déplace, soit est susceptible de changer d'état
     Il peut soit être dans un des 2 cas, soit dans aucun cas, mais jamais dans les 2
     pendant le même tour
-    
-    A noter qu'on dispose d'une matrice_infos_deplacement, elle contient 3 tableaux :
-        - un contenant des tuples de coordonnées d'origines d'individus avant déplacement
-        - un contenant des tuples de coordonnées de destination d'individus après déplacement
-        - un contenant le nombre de tours restant du déplacement de l'individu
+
         
-    Chaque individu qui se déplace part à des coordonnées dispos pendant max 10 tours,
+    Chaque individu qui se déplace part pendant max 6 tours à des coordonnées dispos,
     avant de revenir à son point de départ (il peut changer d'état entre temps)
                                             
-    La valeur du parametre confinement ne doit prendre que soit 0, soit 1 soit 2:
+    La valeur du parametre confinement ne doit prendre que 3 valeurs:
         - si confinement = "Pas de confinement": il n'y a pas de confinement
         - si confinement = "Confinement normal": il y a un confinement mais il reste des chances pour les individus de se deplacer
         - si confinement = "Confinement strict": il n'y a aucune chance que les individus se deplacent
     
+    
+    Fonction utilisée  par 'multi_evolution_world_SEIR' et dans le tkinter
     '''
   
     
@@ -450,7 +517,7 @@ def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_gueriso
     nb_tours_restants=matrice_infos_deplacement[2]
     # Les 3 tableaux sont de même longueur de sorte que lorsque on fait
     # coordonnees_origine[i], coordonnees_cible[i] ou nb_tours_restants[i]
-    # on récupère les informations d'un individu en déplacement
+    # on récupère toutes les informations d'un certain individu en déplacement
     
 
     
@@ -472,8 +539,8 @@ def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_gueriso
     for y in range(len(world)):
         for x in range(len(world[y])):    
             
-    
-            if (world[y][x]!=0 and world[y][x]!=5):
+            # SI il est possible que l'individu bouge ou change d'état (ni espace vide, ni mort)
+            if (world[y][x]!=0 and world[y][x]!=5): 
             
                 places_pour_se_deplacer = coordonnees_zero(world,coordonnees_origine)
     
@@ -485,6 +552,7 @@ def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_gueriso
                     
                     world,x_nouv,y_nouv=deplacement_world_SEIR(world,x,y,coordonnees_origine)
                     
+                    # On met alors à jour les infos de déplacement
                     coordonnees_origine.append((x,y))
                     coordonnees_cible.append((x_nouv,y_nouv))
                     
@@ -494,11 +562,11 @@ def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_gueriso
                 # Sinon on regarde si l'individu change d'état
                 else:
                 
-                    liste_coordonnees = distance(world,x,y)
+                    liste_coordonnees = distance(world,x,y) #liste des points voisins de (x,y)
                     
                     if(len(liste_coordonnees)>0):
                         
-                        if (world[y][x]==1): # On regarde un individu sain (S)
+                        if (world[y][x]==1): # Si on regarde un individu sain (S)
                             
                             # On récupère les coordonnées des ses individus voisins
                             for coord in liste_coordonnees:
@@ -514,7 +582,8 @@ def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_gueriso
                                         world[y][x]=2 # L'individu est contaminé non infectieux (E)
                                         matrice_infection[y][x]= matrice_infection[y][x] + 1
                                         
-                                        if ((x,y) in coordonnees_cible):
+                                        if ((x,y) in coordonnees_cible): # Si l'individu contaminé est en déplacement
+                                            
                                             nb_infectes_pendant_tour=nb_infectes_pendant_tour+1
                                             
                                         break
@@ -522,7 +591,7 @@ def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_gueriso
                         
                         else:
                             
-                            if (world[y][x]==2): # On regarde un individu contaminé non infectieux (E)
+                            if (world[y][x]==2): # Si on regarde un individu contaminé non infectieux (E)
                                 
                             
                                 proba=np.random.randint(1,101)
@@ -533,27 +602,27 @@ def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_gueriso
                                 
                             else :
                                 
-                                if (world[y][x]==3): # On regarde un individu infectieux (I)
+                                if (world[y][x]==3): # Si on regarde un individu infectieux (I)
                                     
-                                    guerri_ou_mort=np.random.randint(1,3) # on obtient 1 ou 2
+                                    guerri_ou_mort=np.random.randint(1,3) # Tirage, on obtient 1 ou 2
                                 
                                     if (guerri_ou_mort==1): # On fait un tirage pour savoir si l'individu guérri ou pas
                                         
                                         proba=np.random.randint(1,101)
                                                 
                                         if (proba<=proba_guerison):
-                                            world[y][x]=4 # L'individu est guérri (R1)
+                                            world[y][x]=4 # L'individu devient guérri (R1)
                                     
                                     elif (guerri_ou_mort==2): # On fait un tirage pour savoir si l'individu meurt ou pas
                                         
                                         proba=np.random.randint(1,101)
                                                 
                                         if (proba<=proba_mort): # Pour R, moyenne guérison et mort pour l'instant
-                                            world[y][x]=5 # L'individu est mort (R2)
+                                            world[y][x]=5 # L'individu devient mort (R2)
       
     
 
-        
+    # Si il y a au mininmum un individu en déplacement
     if (len(nb_tours_restants)>0):
         
         l=len(nb_tours_restants)
@@ -625,10 +694,11 @@ def evolution_world_SEIR(world,proba_incubation,proba_transmission,proba_gueriso
     return world
                 
                 
-def multi_evolution_world_SEIR(nb_tours,world,proba_incubation,proba_transmission,proba_guerison,proba_mort,proba_deplacement,
-                               matrice_infos_deplacement, confinement, matrice_infection,tab_infectes_pendant_deplacement):
+                
+def multi_evolution_world_SEIR(nb_tours:int,world,proba_incubation,proba_transmission,proba_guerison,proba_mort,proba_deplacement,
+                               matrice_infos_deplacement, confinement:str, matrice_infection,tab_infectes_pendant_deplacement):
     '''
-    Renvoit un monde après plusieurs itérations SEIR
+    Renvoit un monde après "nb_tours" itérations SEIR
     '''
     print("\nTour : 0\n")
     affiche_monde(world)
@@ -645,6 +715,7 @@ def multi_evolution_world_SEIR(nb_tours,world,proba_incubation,proba_transmissio
 
 
 
+#Données de tests
 
 '''
 proba_incubation=50
