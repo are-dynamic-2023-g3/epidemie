@@ -59,6 +59,7 @@ La 6ème semaine fut la semaine où l'on a vraiment avancé sur le code python. 
 
 ![](https://www.linkpicture.com/q/image_2023-04-03_011747937.png)
 
+On considère dans notre monde (une matrice de taille 10x10) : 0 := espace vide, 1 := S, 2 := E, 3 := I, 4 := R.
 Voici les résultats des tests:
 
 Paramètres des probabilités α = 50%, β =30%, γ = 30%
