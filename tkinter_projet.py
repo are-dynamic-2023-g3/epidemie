@@ -13,19 +13,20 @@ from matplotlib.backend_bases import key_press_handler
 from matplotlib.figure import Figure
 
 
+'''
+PROGRAMME D'INTERFACE GRAPHIQUE
+'''
+
+
+
+
+
+
+
 
 # Utilisé pour les dégradés de couleurs des infections d'individus
 code_couleur=["white","#F7FF86","#FFDC00","#FFAA00","#FF7B00","#FF4800",
               "#D90025","#B4004A","#8F006F","#63009B"]
-
-
-def center_window(fenetre):
-    '''
-    Fonction qui en étant appellée est censée centrer la fenêtre passée en paramètre.
-    '''
-    
-    eval_ = fenetre.nametowidget('.').eval
-    eval_('tk::PlaceWindow %s center' % fenetre)
 
 
 
@@ -52,6 +53,7 @@ def number_to_color(world:list)->list:
      ['blue', 'pink', 'white', 'green', 'green', 'green'],
      ['green', 'orange', 'orange', 'green', 'green', 'purple']]
      
+    Utilisée dans 'show_world' et 'show_infection'
     '''
     str_world=[]
     
@@ -75,10 +77,13 @@ def number_to_color(world:list)->list:
     
     return str_world
 
+
 def number_to_color2(matrice_infection:list,nb_fenetre)->list:
     """
     Même principe que pour number_to_color, la seule différence est le code couleur
     Fonction appelée pour attribuer les couleurs à la matrice d'infections
+    
+    Utilisée dans 'show_infection'
     """
     str_world_infections=[]
     
@@ -158,6 +163,9 @@ def number_types(world,tab_nb):
     tab_nb[3] -> historique des R1
     tab_nb[4] -> historique des R2
     tab_nb[5] -> historique du nombre total de population (en enlevant les morts)
+    
+    Utilisée dans 'generer_world', 'iterer_tkinter', 'multi_iterer_tkinter', 
+    'simulation_generale', et 'reset'
     '''
     
     nb_S=0
@@ -207,6 +215,9 @@ def number_types_en_deplacement(world,tab_nb_deplacement,matrice_infos_deplaceme
     tab_nb_deplacement[1] -> nombre de E en déplacement
     tab_nb_deplacement[2] -> nombre de I en déplacement
     tab_nb_deplacement[3] -> nombre de R1 en déplacement
+    
+    Utilisée dans 'generer_world', 'iterer_tkinter', 'multi_iterer_tkinter', 
+    'simulation_generale', et 'reset'
     '''
     
     coordonnees_cible=matrice_infos_deplacement[1]
@@ -244,6 +255,16 @@ def number_types_en_deplacement(world,tab_nb_deplacement,matrice_infos_deplaceme
 
 
 
+def center_window(fenetre):
+    '''
+    Fonction qui en étant appellée est censée centrer la fenêtre passée en paramètre.
+    '''
+    
+    eval_ = fenetre.nametowidget('.').eval
+    eval_('tk::PlaceWindow %s center' % fenetre)
+
+
+
 def delete_grille(fenetre):
     """
     Détruit les éléments d'une fenêtre
@@ -256,14 +277,21 @@ def delete_grille(fenetre):
             widget.grid_forget()
             widget.destroy()
             
+            
+            
+            
+            
     
-
-# On cree notre fenetre Tkinter
+''' Fonctions de setup / génération du monde '''
+    
 
 def setup_tkinter(first_time:int,fenetre):
     """
     Setup et affiche notre écran d'accueil, qui demande le nombre d'individus du monde
     et le type du monde.
+    
+    Si first time != 1, ça veut dire qu'on affiche un nombre d'erreur concernant le
+    nombre d'individus choisis selon le monde.
     """
     
     if (first_time==1):
@@ -278,7 +306,7 @@ def setup_tkinter(first_time:int,fenetre):
         fenetre.title("Paramètres évolution d'épidémie")
         fenetre.config(bg = "#87CEEB") 
         
-        #fenetre.geometry("1000x400+500+300")
+        #fenetre.geometry("1000x600+500+300")
         fenetre.geometry("1000x600")
         center_window(fenetre)
         
@@ -286,8 +314,6 @@ def setup_tkinter(first_time:int,fenetre):
         
         for i in range(8):
             fenetre.columnconfigure(i, weight=1)
-    
-        
         for j in range(9):
             fenetre.rowconfigure(j, weight=1)
         
@@ -332,7 +358,6 @@ def setup_tkinter(first_time:int,fenetre):
         Tk.Button(fenetre, text = "Générer un grand monde \n aléatoire",font=("Arial",20),command=lambda:generer_world(fenetre,True,0,0,0,0,0,somme=int(nb_S_grand.get())+int(nb_E_grand.get())+int(nb_I_grand.get())+int(nb_R1_grand.get()),maxi=900)).grid(row=8, column=7,columnspan=2,rowspan=2) 
         
 
-        
         fenetre.mainloop()
         
     elif (first_time==2):
@@ -345,7 +370,13 @@ def setup_tkinter(first_time:int,fenetre):
 
 def generer_world(fenetre,aleatoire:bool,nb_S, nb_E, nb_I, nb_R1,nb_R2,somme,maxi):
     """
-    Permet de setup la représentation du monde
+    Permet de setup la représentation du monde. 
+    Pour information "somme" c'est juste la somme des nb S E I R1 R2.
+    
+    Dans le cas où la somme dépasse le nombre maximal de cases du monde, la 
+    fonction redirige vers l'écran d'accueil
+    
+    Utilisée dans 'setup_tkinter' (boutons)
     """
 
     tab_nb=[[],[],[],[],[],[]]
@@ -401,6 +432,8 @@ def generer_world(fenetre,aleatoire:bool,nb_S, nb_E, nb_I, nb_R1,nb_R2,somme,max
     
         afficher_monde_tkinter(fenetre,original_world,world,0,0,0,0,0,0,tab_nb,matrice_infos_deplacement,"Pas de confinement",matrice_infection,tab_nb_deplacement,tab_infectes_pendant_deplacement)
     
+    
+    # Dans le cas où il y a un problème de somme
     elif (aleatoire==False and somme >maxi): 
         if (maxi==100):
             setup_tkinter(2,fenetre)
@@ -416,7 +449,7 @@ def generer_world(fenetre,aleatoire:bool,nb_S, nb_E, nb_I, nb_R1,nb_R2,somme,max
 
 
 
-
+''' Fonctions d'itérations / simulations '''
 
 
 
@@ -424,6 +457,8 @@ def iterer_tkinter(fenetre,original_world,world,old_incubation,old_transmission,
     '''
     Fonction intermédiaure appelée par l'itération tkinter, affiche le nouveau 
     monde après itération
+    
+    Utilisée dans 'afficher_monde_tkinter' (bouton)
     '''
     world=evolution_world_SEIR(world,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,matrice_infos_deplacement,confinement,matrice_infection,tab_infectes_pendant_deplacement)
     tab_nb=number_types(world,tab_nb)
@@ -437,7 +472,11 @@ def multi_iterer_tkinter(nb_tours_itere,fenetre,original_world,world,old_incubat
     '''
     Fonction intermédiaure appelée par l'itération tkinter, affiche le nouveau 
     monde après plusieurs itérations
+    
+    Utilisée dans 'afficher_monde_tkinter'(bouton)
     '''
+    
+    # On évite de faire plus de 200 itérations d'un seul coup
     if (nb_tours_itere<0 or nb_tours_itere>200):
         nb_tours_itere=0
     
@@ -450,16 +489,18 @@ def multi_iterer_tkinter(nb_tours_itere,fenetre,original_world,world,old_incubat
     afficher_monde_tkinter(fenetre,original_world,world,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,(nb_tours+nb_tours_itere),tab_nb,matrice_infos_deplacement,confinement,matrice_infection,tab_nb_deplacement,tab_infectes_pendant_deplacement)
 
 
-def simulation_generale(nb_simus,nb_tours_itere,fenetre2,world,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,nb_tours,tab_nb,matrice_infos_deplacement,confinement,matrice_infection,tab_nb_deplacement,tab_infectes_pendant_deplacement):
+def simulation_generale(nb_simus,nb_tours_itere,fenetre2,world,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,nb_tours,tab_nb,matrice_infos_deplacement,confinement,matrice_infection,tab_nb_deplacement,tab_infectes_pendant_deplacement,donnees_reset_simu):
     '''
     Permet de récupérer la moyenne de "nb_simus" simulations sur "nb_tours_itere" tours
     à partir d'un monde de départ "world". Affiche ensuite le résultat avec
     la fonction affiche_simus_generales sur l'écran de simulation
+    
+    Utilisée dans 'affiche_simus_generales'
     '''
 
     for i in range(nb_simus):
         
-        # On fait des copies de chaques tableaux et matrices utilisés par simulation
+        # On fait des copies par simulation de chaques tableaux et matrices utilisés
         world_simu=copy.deepcopy(world)
         matrice_infos_deplacement_simu=copy.deepcopy(matrice_infos_deplacement)
         tab_nb_simu=copy.deepcopy(tab_nb)
@@ -488,7 +529,7 @@ def simulation_generale(nb_simus,nb_tours_itere,fenetre2,world,old_incubation,ol
         
     
     # On passe des tableaux et matrices en array avant de les remettre
-    # en listes pour faciliter les opérations dans la fonction
+    # en listes pour faciliter les opérations dessus
     
     tab_nb_resultat=tab_nb_resultat/nb_simus
     tab_nb_resultat=tab_nb_resultat.tolist()
@@ -502,11 +543,39 @@ def simulation_generale(nb_simus,nb_tours_itere,fenetre2,world,old_incubation,ol
     matrice_infection_resultat=matrice_infection_resultat/nb_simus
     matrice_infection_resultat=matrice_infection_resultat.tolist()
     
-    affiche_simus_generales(fenetre2,world,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,nb_tours+nb_tours_itere,tab_nb_resultat,matrice_infos_deplacement_simu,False,confinement,matrice_infection_resultat,tab_nb_deplacement_resultat,tab_infectes_pendant_deplacement_resultat)
+    affiche_simus_generales(fenetre2,world,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,nb_tours+nb_tours_itere,tab_nb_resultat,matrice_infos_deplacement_simu,False,confinement,matrice_infection_resultat,tab_nb_deplacement_resultat,tab_infectes_pendant_deplacement_resultat,donnees_reset_simu)
         
 
 
 
+def reset(fenetre,original_world):
+    '''
+    Appelle la fonction affichant la fenetre principale, 'afficher_monde_tkinter',
+    mais en faisant un reset des informations et des tours, en ne gardant que le monde
+    d'origine pour repartir de zéro.
+    
+    Utilisée dans 'afficher_monde_tkinter' (bouton)
+    '''
+    
+    
+    matrice_infos_deplacement=[[],[],[]]
+    
+    tab_nb=[[],[],[],[],[],[]]
+    tab_nb=number_types(original_world,tab_nb)
+    tab_nb_deplacement=[[],[],[],[]]
+    tab_nb_deplacement=number_types_en_deplacement(original_world,tab_nb_deplacement,matrice_infos_deplacement)
+    tab_infectes_pendant_deplacement=[0]
+    
+    
+    matrice_infection=np.zeros((len(original_world),len(original_world))) # On part du principe qu'un individu non sain a été infecté à l'emplacement où il a été défini
+    for y in range(len(matrice_infection)):
+        for x in range(len(matrice_infection[0])):
+            if ((original_world[y][x]==2) or (original_world[y][x]==3) or (original_world[y][x]==4)):
+                matrice_infection[y][x]=1
+
+    world=copy.deepcopy(original_world)
+
+    afficher_monde_tkinter(fenetre,original_world,world,0,0,0,0,0,0,tab_nb,matrice_infos_deplacement,"Pas de confinement",matrice_infection,tab_nb_deplacement,tab_infectes_pendant_deplacement)
 
 
 
@@ -515,7 +584,7 @@ def simulation_generale(nb_simus,nb_tours_itere,fenetre2,world,old_incubation,ol
 
 
 
-
+''' Fonctions d'affichage des matrices du monde / des graphiques '''
 
 
 
@@ -525,6 +594,8 @@ def show_world(fenetre,world,nb_fenetre:int):
     La fenetre en question est déterminée par 'nb_fenetre'.
     'nb_fenetre' = 0 -> fenetre principale
     'nb_fenetre' = 1 -> fenetre de simulation
+    
+    Utilisée dans 'afficher_monde_tkinter' et 'affiche_simus_generales' (boutons)
     '''
     
     
@@ -570,6 +641,7 @@ def show_world(fenetre,world,nb_fenetre:int):
 
     
     else:
+        echelle_pad_grille=0.5
         
         Tk.Label(fenetre,bg="#87CEEB",text="Notre monde avant simulation",font=("Arial",18,"bold")).grid(row=0, column=0,sticky='nesw',columnspan=10,rowspan=2)
         Tk.Label(fenetre,bg="#87CEEB").grid(row=13, column=0,sticky='nesw',rowspan=3,columnspan=10)
@@ -593,6 +665,8 @@ def show_infection(fenetre,matrice_infection,nb_fenetre:int):
     La fenetre en question est déterminée par 'nb_fenetre'.
     'nb_fenetre' = 0 -> fenetre principale
     'nb_fenetre' = 1 -> fenetre de simulation
+    
+    Utilisée dans 'afficher_monde_tkinter' et 'affiche_simus_generales' (boutons)
     '''
     
     
@@ -676,6 +750,7 @@ def show_infection(fenetre,matrice_infection,nb_fenetre:int):
         world_infections_color=number_to_color2(matrice_infection,1)
         
     else:
+        echelle_pad_grille=0.5
         
         Tk.Label(fenetre,bg="#87CEEB",text="Notre matrice d'infections",font=("Arial",18,"bold")).grid(row=0, column=0,sticky='nesw',columnspan=10,rowspan=2)
         world_infections_color=number_to_color2(matrice_infection,2)
@@ -719,12 +794,16 @@ def show_type_graphique(fenetre,world,nb_tours,tab_nb,type_graphique:int,nb_fene
     La fenetre en question est déterminée par 'nb_fenetre'.
     'nb_fenetre' = 0 -> fenetre principale
     'nb_fenetre' = 1 -> fenetre de simulation
+    
+    Utilisée dans 'afficher_monde_tkinter' et 'affiche_simus_generales' (boutons)
     '''
     
     echelle=1
     echelle_ligne=1
     
     t = np.arange(0, nb_tours+1, 1)
+    
+    lim_y=(tab_nb[5][0])+5 # Fixe l'échelle en y des graphiques
     
     if(len(world))==10:
         
@@ -747,10 +826,11 @@ def show_type_graphique(fenetre,world,nb_tours,tab_nb,type_graphique:int,nb_fene
                 total_R=np.array(tab_nb[3])+np.array(tab_nb[4])
                 total_R.tolist()
                 
-                ax.plot(t, tab_nb[0] , color = 'blue')
-                ax.plot(t, tab_nb[1] , color = 'green')
-                ax.plot(t, tab_nb[2] , color = 'orange')
-                ax.plot(t, total_R , color = 'red')
+                ax.set_ylim(0, lim_y)
+                ax.plot(t, tab_nb[0] , color = 'blue') #S
+                ax.plot(t, tab_nb[1] , color = 'green') #E
+                ax.plot(t, tab_nb[2] , color = 'orange') #I
+                ax.plot(t, total_R , color = 'red') #R
                 
             elif (type_graphique==2):    
                 
@@ -762,11 +842,12 @@ def show_type_graphique(fenetre,world,nb_tours,tab_nb,type_graphique:int,nb_fene
                 Tk.Label(fenetre,bg="black").grid(row=11*echelle_ligne, column=18*echelle,sticky='nesw',padx=5, pady=5,rowspan=1*echelle_ligne,columnspan=1*echelle_ligne)
                 
                 
-                ax.plot(t, tab_nb[0] , color = 'blue')
-                ax.plot(t, tab_nb[1] , color = 'green')
-                ax.plot(t, tab_nb[2] , color = 'orange')
-                ax.plot(t, tab_nb[3] , color = 'pink')
-                ax.plot(t, tab_nb[4] , color = '#A51616')
+                ax.set_ylim(0, lim_y)
+                ax.plot(t, tab_nb[0] , color = 'blue') #S
+                ax.plot(t, tab_nb[1] , color = 'green') #E
+                ax.plot(t, tab_nb[2] , color = 'orange') #I
+                ax.plot(t, tab_nb[3] , color = 'pink') #R1
+                ax.plot(t, tab_nb[4] , color = '#A51616') #R2
                 ax.plot(t, tab_nb[5] , color = 'black') # La population totale
             
             ax.set_ylabel("Nombre d'individus",labelpad=-4,fontsize=18)
@@ -788,23 +869,25 @@ def show_type_graphique(fenetre,world,nb_tours,tab_nb,type_graphique:int,nb_fene
                 total_R=np.array(tab_nb[3])+np.array(tab_nb[4])
                 total_R.tolist()
                 
-                ax.plot(t, tab_nb[0] , color = 'blue')
-                ax.plot(t, tab_nb[1] , color = 'green')
-                ax.plot(t, tab_nb[2] , color = 'orange')
-                ax.plot(t, total_R , color = 'red')
+                ax.set_ylim(0, lim_y)
+                ax.plot(t, tab_nb[0] , color = 'blue') #S
+                ax.plot(t, tab_nb[1] , color = 'green') #E
+                ax.plot(t, tab_nb[2] , color = 'orange') #I
+                ax.plot(t, total_R , color = 'red') #R
                 
             elif (type_graphique==2):    
                 
                 
-                ax.plot(t, tab_nb[0] , color = 'blue')
-                ax.plot(t, tab_nb[1] , color = 'green')
-                ax.plot(t, tab_nb[2] , color = 'orange')
-                ax.plot(t, tab_nb[3] , color = 'pink')
-                ax.plot(t, tab_nb[4] , color = '#A51616')
+                ax.set_ylim(0, lim_y)
+                ax.plot(t, tab_nb[0] , color = 'blue') #S
+                ax.plot(t, tab_nb[1] , color = 'green') #E
+                ax.plot(t, tab_nb[2] , color = 'orange') #I
+                ax.plot(t, tab_nb[3] , color = 'pink') #R1
+                ax.plot(t, tab_nb[4] , color = '#A51616') #R2
                 ax.plot(t, tab_nb[5] , color = 'black') # La population totale
             
             ax.set_ylabel("Nombre d'individus",labelpad=-4,fontsize=18)
-            ax.set_xlabel("Nombre de tours",labelpad=2.5,fontsize=18)
+            ax.set_xlabel("Nombre de tours",labelpad=-3,fontsize=18)
             
             canvas2 = FigureCanvasTkAgg(fig, master=fenetre)  
             canvas2.draw()
@@ -816,6 +899,8 @@ def show_type_graphique(fenetre,world,nb_tours,tab_nb,type_graphique:int,nb_fene
         
         echelle=3
         echelle_ligne=2
+        
+        lim_y=(tab_nb[5][0])+15
 
         fig = Figure(figsize=(3, 2), dpi=100)
         ax = fig.add_subplot()
@@ -833,10 +918,11 @@ def show_type_graphique(fenetre,world,nb_tours,tab_nb,type_graphique:int,nb_fene
             total_R=np.array(tab_nb[3])+np.array(tab_nb[4])
             total_R.tolist()
             
-            ax.plot(t, tab_nb[0] , color = 'blue')
-            ax.plot(t, tab_nb[1] , color = 'green')
-            ax.plot(t, tab_nb[2] , color = 'orange')
-            ax.plot(t, total_R , color = 'red')
+            ax.set_ylim(0, lim_y)
+            ax.plot(t, tab_nb[0] , color = 'blue') #S
+            ax.plot(t, tab_nb[1] , color = 'green') #E
+            ax.plot(t, tab_nb[2] , color = 'orange') #I
+            ax.plot(t, total_R , color = 'red') #R
             
         elif (type_graphique==2):    
             
@@ -848,12 +934,12 @@ def show_type_graphique(fenetre,world,nb_tours,tab_nb,type_graphique:int,nb_fene
             Tk.Label(fenetre,bg="black").grid(row=11*echelle_ligne, column=18*echelle,sticky='nesw',padx=5, pady=5,rowspan=1*echelle_ligne,columnspan=1*echelle_ligne)
             
             
-            
-            ax.plot(t, tab_nb[0] , color = 'blue')
-            ax.plot(t, tab_nb[1] , color = 'green')
-            ax.plot(t, tab_nb[2] , color = 'orange')
-            ax.plot(t, tab_nb[3] , color = 'pink')
-            ax.plot(t, tab_nb[4] , color = 'purple')
+            ax.set_ylim(0, lim_y)
+            ax.plot(t, tab_nb[0] , color = 'blue') #S
+            ax.plot(t, tab_nb[1] , color = 'green') #E
+            ax.plot(t, tab_nb[2] , color = 'orange') #I
+            ax.plot(t, tab_nb[3] , color = 'pink') #R1
+            ax.plot(t, tab_nb[4] , color = 'purple') #R2
         
             
         ax.set_ylabel("Nombre d'individus",labelpad=-4,fontsize=18)
@@ -865,32 +951,6 @@ def show_type_graphique(fenetre,world,nb_tours,tab_nb,type_graphique:int,nb_fene
 
 
 
-def reset(fenetre,original_world):
-    '''
-    Appelle la fonction affichant la fenetre principale, 'afficher_monde_tkinter',
-    mais en faisant un reset des informations et des tours, en ne gardant que le monde
-    d'origine pour repartir de zéro.
-    '''
-    
-    
-    matrice_infos_deplacement=[[],[],[]]
-    
-    tab_nb=[[],[],[],[],[],[]]
-    tab_nb=number_types(original_world,tab_nb)
-    tab_nb_deplacement=[[],[],[],[]]
-    tab_nb_deplacement=number_types_en_deplacement(original_world,tab_nb_deplacement,matrice_infos_deplacement)
-    tab_infectes_pendant_deplacement=[0]
-    
-    
-    matrice_infection=np.zeros((len(original_world),len(original_world))) # On part du principe qu'un individu non sain a été infecté à l'emplacement où il a été défini
-    for y in range(len(matrice_infection)):
-        for x in range(len(matrice_infection[0])):
-            if ((original_world[y][x]==2) or (original_world[y][x]==3) or (original_world[y][x]==4)):
-                matrice_infection[y][x]=1
-
-    world=copy.deepcopy(original_world)
-
-    afficher_monde_tkinter(fenetre,original_world,world,0,0,0,0,0,0,tab_nb,matrice_infos_deplacement,"Pas de confinement",matrice_infection,tab_nb_deplacement,tab_infectes_pendant_deplacement)
 
 
 
@@ -898,18 +958,20 @@ def reset(fenetre,original_world):
 
 
 
+''' Fonctions d'affichage des fenêtre d'itérations / de simulations'''
 
 
 
-def afficher_monde_tkinter(fenetre,original_world,world,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,nb_tours,tab_nb,matrice_infos_deplacement,confinement,matrice_infection,tab_nb_deplacement,tab_infectes_pendant_deplacement):
+def afficher_monde_tkinter(fenetre,original_world,world,old_incubation,old_transmission,old_guerison,old_mortalite,old_deplacement,nb_tours,tab_nb,matrice_infos_deplacement,confinement:str,matrice_infection,tab_nb_deplacement,tab_infectes_pendant_deplacement):
     '''
     Affichage de la fenêtre principale, permettant d'itérer le monde
+    
+    Utilisée dans 'generer_world', 'iterer_tkinter', 'multi_iterer_tkinter' et 'reset'
     '''
 
     
     delete_grille(fenetre)
     
-    #fenetre.geometry("1400x800+200+150")
     fenetre.title("Modélisation évolution d'épidémie")
     
     fenetre.attributes('-fullscreen', True)
@@ -930,6 +992,7 @@ def afficher_monde_tkinter(fenetre,original_world,world,old_incubation,old_trans
         fenetre.rowconfigure(j, weight=1)
     
     
+    # Affiche le monde
     show_world(fenetre,world,1)
     if(len(world)==10): # Pour éviter des problèmes d'échelle
         show_infection(fenetre,matrice_infection,1)
@@ -1040,8 +1103,10 @@ def afficher_monde_tkinter(fenetre,original_world,world,old_incubation,old_trans
 
 def setup_affiche_simus_generales(fenetre,world,incubation,transmission,guerison,mortalite,deplacement,nb_tours,tab_nb,matrice_infos_deplacement,confinement,matrice_infection,tab_nb_deplacement,tab_infectes_pendant_deplacement):
     '''
-    Setup l'affichage de simulation, on regarde si il y a pas déjà une fenêtre de simulation ouverte
+    Setup la fenêtre de simulation, on regarde si il y a pas déjà une fenêtre de simulation ouverte
     Si c'est le cas on la détruit avant d'afficher l'affichage de simulation
+    
+    Utilisée dans'afficher_monde_tkinter' (bouton)
     '''
     
     for widget in fenetre.winfo_children():
@@ -1054,19 +1119,26 @@ def setup_affiche_simus_generales(fenetre,world,incubation,transmission,guerison
     fenetre2.config(bg = "#87CEEB") 
     fenetre2.bind('<Escape>',lambda e: fenetre2.destroy())
         
-    #fenetre.geometry("1000x400+500+300")
-    fenetre2.geometry("1400x800")
-    fenetre2.attributes('-topmost', 1)
+    #fenetre.geometry("1300x800+500+300")
+    fenetre2.geometry("1300x800")
+    fenetre2.wm_transient(fenetre)
     center_window(fenetre2)
     
-    affiche_simus_generales(fenetre2,world,incubation,transmission,guerison,mortalite,deplacement,nb_tours,tab_nb,matrice_infos_deplacement,True,confinement,matrice_infection,tab_nb_deplacement,tab_infectes_pendant_deplacement)
+    affiche_simus_generales(fenetre2,world,incubation,transmission,guerison,mortalite,deplacement,nb_tours,tab_nb,matrice_infos_deplacement,True,confinement,matrice_infection,tab_nb_deplacement,tab_infectes_pendant_deplacement,False)
 
     fenetre2.mainloop()   
     
     
-def affiche_simus_generales(fenetre2,world,incubation,transmission,guerison,mortalite,deplacement,nb_tours,tab_nb,matrice_infos_deplacement,first_time,confinement,matrice_infection,tab_nb_deplacement,tab_infectes_pendant_deplacement):
+def affiche_simus_generales(fenetre2,world,incubation,transmission,guerison,mortalite,deplacement,nb_tours,tab_nb,matrice_infos_deplacement,first_time,confinement,matrice_infection,tab_nb_deplacement,tab_infectes_pendant_deplacement,donnees_reset_simu):
     '''
     Affiche la fenêtre de simulation
+    
+    Concernant le paramètre "donnees_reset_simu", si la fonction est appelée avant simulation,
+    alors donnees_reset_simu=False. Ca coincide avec first_time=True.
+    Sinon si après une simulation on fait un reset, on ré-affiche l'affichage avec les données
+    issues de "donnees_reset_simu".
+    
+    Utilisée dans'setup_affiche_simus_generales'
     ''' 
     
     for i in range(30):
@@ -1087,6 +1159,22 @@ def affiche_simus_generales(fenetre2,world,incubation,transmission,guerison,mort
     Tk.Button(fenetre2, text = "Afficher monde",font=("Arial",18),command=lambda:show_world(fenetre2,world,2)).grid(row=12, column=0,columnspan=5,rowspan=1) 
     Tk.Button(fenetre2, text = "Afficher infections",font=("Arial",18),command=lambda:show_infection(fenetre2,matrice_infection,2)).grid(row=12, column=5,columnspan=5,rowspan=1) 
     
+    
+    if (first_time==True):
+        
+        # On crée notre tableau de données d'avant simulation
+        donnees_reset_simu=[world,incubation,transmission,guerison,mortalite,deplacement,nb_tours,tab_nb,matrice_infos_deplacement,confinement,matrice_infection,tab_nb_deplacement,tab_infectes_pendant_deplacement]
+        
+        nb_tours2_itere=Tk.IntVar()
+        Tk.Spinbox(fenetre2, from_= 0, to = 1000,textvariable=nb_tours2_itere,font=("Arial",20),width=4).grid(row=16, column=7,columnspan=2,pady=10,rowspan=4)
+        
+        Tk.Button(fenetre2, text = "Simuler n tours",font=("Arial",20),command=lambda:simulation_generale(20,int(nb_tours2_itere.get()),fenetre2,world,int(incubation2.get()),int(transmission2.get()),int(guerison2.get()),int(mortalite2.get()),int(deplacement2.get()),nb_tours,tab_nb,matrice_infos_deplacement,str(combobox.get()),matrice_infection,tab_nb_deplacement,tab_infectes_pendant_deplacement,donnees_reset_simu)).grid(row=16, column=0,columnspan=8,pady=10,rowspan=4)
+    
+        
+    else:
+        # En cas de reset, on utilise le tableau de données d'avant simulation pour afficher l'écran de simulation
+        # Par contre on reprend les paramètres rentrés avec la simulation
+        Tk.Button(fenetre2, text = "Reset simulation",font=("Arial",20),command=lambda:affiche_simus_generales(fenetre2,donnees_reset_simu[0],int(incubation2.get()),int(transmission2.get()),int(guerison2.get()),int(mortalite2.get()),int(deplacement2.get()),donnees_reset_simu[6],donnees_reset_simu[7],donnees_reset_simu[8],True,donnees_reset_simu[9],donnees_reset_simu[10],donnees_reset_simu[11],donnees_reset_simu[12],False)).grid(row=16, column=0,columnspan=10,pady=10,rowspan=4)
     
     
     # Affichage du milieu de la fenêtre
@@ -1130,10 +1218,38 @@ def affiche_simus_generales(fenetre2,world,incubation,transmission,guerison,mort
     combobox.grid(row=12, column=15,rowspan=2,columnspan=5)
     
     
-    if (first_time==True):
-        Tk.Button(fenetre2, text = "Simuler (100 tours)",font=("Arial",20),command=lambda:simulation_generale(20,100,fenetre2,world,int(incubation2.get()),int(transmission2.get()),int(guerison2.get()),int(mortalite2.get()),int(deplacement2.get()),nb_tours,tab_nb,matrice_infos_deplacement,str(combobox.get()),matrice_infection,tab_nb_deplacement,tab_infectes_pendant_deplacement)).grid(row=14, column=10,columnspan=10,pady=10,rowspan=2)
-        
-        
+    
+    # Graphe classique SEIR 'classique'
+    
+    S=tab_nb[0][0]
+    E=tab_nb[1][0]
+    I=tab_nb[2][0]
+    R=tab_nb[3][0]+tab_nb[4][0]
+    population=tab_nb[5][0]
+
+    params=setup_tab_param(S/100, E/100, I/100, R/100,incubation/100,transmission/100,guerison/100,mortalite/100,nb_tours,population/100)
+    # La fonction prend en paramètres des taux, entre 0 et 1, non des pourcentages
+    
+    
+    Tk.Label(fenetre2,bg="#87CEEB",text="Graphique SEIR 'classique',\n obtenu avec équations",font=("Arial",17,"bold")).grid(row=14, column=10,sticky='nesw',columnspan=10,rowspan=2)
+    
+    fig2_SEIR_classique = Figure(figsize=(3, 2), dpi=100)
+    ax2_SEIR_classique = fig2_SEIR_classique.add_subplot()
+    
+    # On affiche les valeurs sur une échelle de 0 à 100
+    ax2_SEIR_classique.plot(params[5], np.array(params[0])*100 , color = 'blue')
+    ax2_SEIR_classique.plot(params[5], np.array(params[1])*100 , color = 'green')
+    ax2_SEIR_classique.plot(params[5], np.array(params[2])*100 , color = 'orange')
+    ax2_SEIR_classique.plot(params[5], np.array(params[3])*100 , color = 'red')
+    ax2_SEIR_classique.plot(params[5], np.array(params[4])*100 , color = 'black')
+    
+    canvas2_SEIR_classique = FigureCanvasTkAgg(fig2_SEIR_classique, master=fenetre2)  
+    canvas2_SEIR_classique.draw()
+    canvas2_SEIR_classique.get_tk_widget().grid(row=16, column=10,sticky='nesw',columnspan=10,rowspan=10,padx=5,pady=5)
+    
+
+
+
 
     
     # Affichage de droite de la fenêtre
@@ -1152,9 +1268,9 @@ def affiche_simus_generales(fenetre2,world,incubation,transmission,guerison,mort
     
     
     if (first_time==True):
-        Tk.Label(fenetre2,bg="#87CEEB",text="Données sur les individus en\n déplacement avant simulation",font=("Arial",18,"bold")).grid(row=14, column=20,sticky='nesw',rowspan=2,columnspan=10)
+        Tk.Label(fenetre2,bg="#87CEEB",text="Données sur les individus en\n déplacement avant simulation",font=("Arial",17,"bold")).grid(row=14, column=20,sticky='nesw',rowspan=2,columnspan=10)
     else:
-        Tk.Label(fenetre2,bg="#87CEEB",text="Données sur les individus en\n déplacement après simulation",font=("Arial",18,"bold")).grid(row=14, column=20,sticky='nesw',rowspan=2,columnspan=10)
+        Tk.Label(fenetre2,bg="#87CEEB",text="Données sur les individus en\n déplacement après simulation",font=("Arial",17,"bold")).grid(row=14, column=20,sticky='nesw',rowspan=2,columnspan=10)
 
     fig2_deplacement = Figure(figsize=(3, 2), dpi=100)
     t = np.arange(0, nb_tours+1, 1)
@@ -1168,7 +1284,7 @@ def affiche_simus_generales(fenetre2,world,incubation,transmission,guerison,mort
     
     canvas2_deplacement = FigureCanvasTkAgg(fig2_deplacement, master=fenetre2)  
     canvas2_deplacement.draw()
-    canvas2_deplacement.get_tk_widget().grid(row=16, column=20,sticky='nesw',columnspan=10,rowspan=10,padx=5,pady=0)
+    canvas2_deplacement.get_tk_widget().grid(row=16, column=20,sticky='nesw',columnspan=10,rowspan=10,padx=5,pady=5)
 
 
 
