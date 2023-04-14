@@ -151,5 +151,7 @@ Sa matrice d'infections et et son graphique avancé:
 Quelques infos sur la légende de la matrice d'infections de l'écran de simulation. Il y a 3 trucs implicites:
 
 -Si une case a exactement 0 infections elle est blanche.
+
 -Un intervalle inclut le nombre supérieur mais pas inférieur.
+
 -Le dernier intervale c'est ]1.25, +infini[.
