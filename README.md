@@ -132,26 +132,24 @@ Voici les nouveaux résultats avec la matrice d'infections et le graphique avanc
 
 ![](https://www.linkpicture.com/q/image_2023-04-12_215351611.png)
 
-Maintenant, passons aux résultats des nouveaux simulations. Voici les résultats de la simulation après 100 itérations:
+Maintenant, passons aux résultats des simulations. Voici les résultats de la simulation après 100 itérations sans confinement:
 
 ![](https://www.linkpicture.com/q/image_2023-04-14_150809045.png)
 
-Voici la même simulation avec les graphiques avancé;
+Voici cette fois la vue de la matrice d'infections et du graphique avancé:
 
 ![](https://www.linkpicture.com/q/image_2023-04-14_151054431.png)
 
-Une deuxième simulation:
+Une deuxième simulation, cette fois avec un confinement (normal, pas strict):
 
 ![](https://www.linkpicture.com/q/image_2023-04-14_154020486.png)
 
-Son graphe avancé:
+Sa matrice d'infections et et son graphique avancé:
 
 ![](https://www.linkpicture.com/q/image_2023-04-14_153354121.png)
 
-Info sur la légende de la matrice d'infection de simulation: Il y a 3 trucs implicites:
+Quelques infos sur la légende de la matrice d'infections de l'écran de simulation. Il y a 3 trucs implicites:
 
 -Si une case a exactement 0 infections elle est blanche.
-
 -Un intervalle inclut le nombre supérieur mais pas inférieur.
-
 -Le dernier intervale c'est ]1.25, +infini[.
