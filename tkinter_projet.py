@@ -307,7 +307,7 @@ def setup_tkinter(first_time:int,fenetre):
         fenetre.config(bg = "#87CEEB") 
         
         #fenetre.geometry("1000x600+500+300")
-        fenetre.geometry("1000x600")
+        #fenetre.geometry("1000x600")
         center_window(fenetre)
         
         
@@ -1052,18 +1052,18 @@ def afficher_monde_tkinter(fenetre,original_world,world,old_incubation,old_trans
     Tk.Button(fenetre, text = "Reset les itérations",font=("Arial",18),command=lambda:reset(fenetre,original_world)).grid(row=18*echelle_ligne, column=10*echelle,columnspan=2*echelle,rowspan=2*echelle_ligne)
     
     if (len(world)==10):
-        Tk.Button(fenetre, text = "Simulation générale à partir du monde",font=("Arial",20),command=lambda:setup_affiche_simus_generales(fenetre,world,int(incubation.get()),int(transmission.get()),int(guerison.get()),int(mortalite.get()),int(deplacement.get()),nb_tours,tab_nb,matrice_infos_deplacement,str(combobox.get()),matrice_infection,tab_nb_deplacement,tab_infectes_pendant_deplacement)).grid(row=21*echelle_ligne, column=10*echelle,columnspan=2*echelle,pady=10,rowspan=1*echelle_ligne) 
+        Tk.Button(fenetre, text = "Simulation générale à partir du monde",font=("Arial",20),command=lambda:setup_affiche_simus_generales(fenetre,world,int(incubation.get()),int(transmission.get()),int(guerison.get()),int(mortalite.get()),int(deplacement.get()),nb_tours,tab_nb,matrice_infos_deplacement,str(combobox.get()),matrice_infection,tab_nb_deplacement,tab_infectes_pendant_deplacement)).grid(row=20*echelle_ligne, column=10*echelle,columnspan=2*echelle,rowspan=1*echelle_ligne) 
     
     
     # Partie affichée sous le monde
     
     
-    Tk.Button(fenetre, text = "Afficher monde",font=("Arial",18),command=lambda:show_world(fenetre,world,1)).grid(row=15*echelle_ligne+2, column=0*echelle,columnspan=5*echelle,rowspan=1*echelle_ligne) 
-    Tk.Button(fenetre, text = "Afficher infections",font=("Arial",18),command=lambda:show_infection(fenetre,matrice_infection,1)).grid(row=15*echelle_ligne+2, column=5*echelle,columnspan=5*echelle,rowspan=1*echelle_ligne) 
+    Tk.Button(fenetre, text = "Monde",font=("Arial",18),command=lambda:show_world(fenetre,world,1)).grid(row=15*echelle_ligne+2, column=0*echelle,columnspan=5*echelle,rowspan=1*echelle_ligne) 
+    Tk.Button(fenetre, text = "Infections",font=("Arial",18),command=lambda:show_infection(fenetre,matrice_infection,1)).grid(row=15*echelle_ligne+2, column=5*echelle,columnspan=5*echelle,rowspan=1*echelle_ligne) 
     
     Tk.Button(fenetre, text = "Générer un nouveau monde",font=("Arial",20),command=lambda:setup_tkinter(1,fenetre)).grid(row=19*echelle_ligne+2, column=0*echelle,columnspan=10*echelle,pady=10,rowspan=1*echelle_ligne) 
     
-    Tk.Label(fenetre,bg="#87CEEB",text="Appuyez sur échap pour quitter",font=("Arial",20,"bold")).grid(row=20*echelle_ligne+2, column=0*echelle,sticky='nesw',rowspan=2*echelle_ligne,columnspan=10*echelle)
+    Tk.Label(fenetre,bg="#87CEEB",text="Appuyez sur échap pour quitter",font=("Arial",20,"bold")).grid(row=19*echelle_ligne+2, column=10*echelle,sticky='nesw',rowspan=2*echelle_ligne,columnspan=2*echelle)
     
     
     # Partie du plot à droite
@@ -1077,9 +1077,9 @@ def afficher_monde_tkinter(fenetre,original_world,world,old_incubation,old_trans
 
 
     if (len(world)==10):
-        Tk.Label(fenetre,bg="#87CEEB",text="Données sur les individus en déplacement",font=("Arial",18,"bold")).grid(row=12, column=12,sticky='nesw',rowspan=1,columnspan=10)
+        Tk.Label(fenetre,bg="#87CEEB",text="Données sur les individus\n en déplacement",font=("Arial",18,"bold")).grid(row=12, column=12,sticky='nesw',rowspan=1,columnspan=10)
     elif (len(world)==30):
-        Tk.Label(fenetre,bg="#87CEEB",text="Données sur les individus\n en déplacement",font=("Arial",18,"bold")).grid(row=24, column=40,sticky='nesw',rowspan=2,columnspan=20)
+        Tk.Label(fenetre,bg="#87CEEB",text="Données sur les individus en déplacement",font=("Arial",16,"bold")).grid(row=24, column=41,sticky='nesw',rowspan=2,columnspan=20)
 
 
     fig_deplacement = Figure(figsize=(3, 2), dpi=100)
@@ -1097,7 +1097,7 @@ def afficher_monde_tkinter(fenetre,original_world,world,old_incubation,old_trans
     canvas_deplacement.get_tk_widget().grid(row=13*echelle_ligne, column=13*echelle,sticky='nesw',columnspan=8*echelle,rowspan=8*echelle_ligne)
 
 
-    Tk.Label(fenetre,bg="#87CEEB",text="Nb d'individus infectés pendant déplacement",font=("Arial",16,"bold"),fg="gray").grid(row=21*echelle_ligne, column=12*echelle,sticky='nesw',rowspan=1*echelle_ligne,columnspan=10*echelle)
+    Tk.Label(fenetre,bg="#87CEEB",text="Nb d'individus infectés\n pendant déplacement",font=("Arial",16,"bold"),fg="gray").grid(row=21*echelle_ligne, column=12*echelle,sticky='nesw',rowspan=1*echelle_ligne,columnspan=10*echelle)
 
 
 
@@ -1156,8 +1156,8 @@ def affiche_simus_generales(fenetre2,world,incubation,transmission,guerison,mort
     show_infection(fenetre2,world,2)
     show_world(fenetre2,world,2)
     
-    Tk.Button(fenetre2, text = "Afficher monde",font=("Arial",18),command=lambda:show_world(fenetre2,world,2)).grid(row=12, column=0,columnspan=5,rowspan=1) 
-    Tk.Button(fenetre2, text = "Afficher infections",font=("Arial",18),command=lambda:show_infection(fenetre2,matrice_infection,2)).grid(row=12, column=5,columnspan=5,rowspan=1) 
+    Tk.Button(fenetre2, text = "Monde",font=("Arial",18),command=lambda:show_world(fenetre2,world,2)).grid(row=12, column=0,columnspan=5,rowspan=1) 
+    Tk.Button(fenetre2, text = "Infections",font=("Arial",18),command=lambda:show_infection(fenetre2,matrice_infection,2)).grid(row=12, column=5,columnspan=5,rowspan=1) 
     
     
     if (first_time==True):
