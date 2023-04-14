@@ -132,6 +132,26 @@ Voici les nouveaux résultats avec la matrice d'infections et le graphique avanc
 
 ![](https://www.linkpicture.com/q/image_2023-04-12_215351611.png)
 
-Maintenant, passons à l'écran de p
+Maintenant, passons aux résultats des nouveaux simulations. Voici les résultats de la simulation après 100 itérations:
 
+![](https://www.linkpicture.com/q/image_2023-04-14_150809045.png)
 
+Voici la même simulation avec les graphiques avancé;
+
+![](https://www.linkpicture.com/q/image_2023-04-14_151054431.png)
+
+Une deuxième simulation:
+
+![](https://www.linkpicture.com/q/image_2023-04-14_154020486.png)
+
+Son graphe avancé:
+
+![](https://www.linkpicture.com/q/image_2023-04-14_153354121.png)
+
+Info sur la légende de la matrice d'infection de simulation: Il y a 3 trucs implicites:
+
+-Si une case a exactement 0 infections elle est blanche.
+
+-Un intervalle inclut le nombre supérieur mais pas inférieur.
+
+-Le dernier intervale c'est ]1.25, +infini[.
