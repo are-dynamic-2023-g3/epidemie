@@ -148,7 +148,10 @@ Son graphe avancé:
 
 ![](https://www.linkpicture.com/q/image_2023-04-14_153354121.png)
 
-Info sur la légende de la matrice d'infection de simulation: Il y a 3 trucs implicites : 
+Info sur la légende de la matrice d'infection de simulation: Il y a 3 trucs implicites:
+
 -Si une case a exactement 0 infections elle est blanche.
+
 -Un intervalle inclut le nombre supérieur mais pas inférieur.
+
 -Le dernier intervale c'est ]1.25, +infini[.
