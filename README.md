@@ -132,6 +132,15 @@ Voici les nouveaux résultats avec la matrice d'infections et le graphique avanc
 
 ![](https://www.linkpicture.com/q/image_2023-04-12_215351611.png)
 
-Maintenant, passons à l'écran de p
+Maintenant, passons aux résultats des nouveaux simulations. Voici les résultats de la simulation après 100 itérations:
 
+![](https://www.linkpicture.com/q/image_2023-04-14_150809045.png)
 
+Voici la même simulation avec les graphiques avancé;
+
+![](https://www.linkpicture.com/q/image_2023-04-14_151054431.png)
+
+Une deuxième simulation:
+
+![]()
+![]()
