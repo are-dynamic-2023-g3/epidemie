@@ -27,7 +27,7 @@ D'ailleurs, concernant la forme de notre modèle SEIR. Voici une simple représe
 Pendant la troisième séance nous nous sommes notamment concentrés sur notre carnet de bord, où se trouvent les sources des recherches que l'on a faites, pour le terminer.
 
 ## Quatrième semaine 27/02 --> 05/03
-Pendant la semaine des vacances nous avons discuté sur le modèle que l'on allait appliquer dans notre code. Le modèle de ségragation de Schelling a parru être le meilleur choix, vu que la propagation d'épidémies se base certainement aussi sur le voisinage et les déplacements. Notre hypothèse à vérifier avec notre modèle est donc la suivante : Les déplacements des individus impactent-ils l'évolution de la propagation d'une épidémie ?
+Pendant la semaine des vacances nous avons discuté sur le modèle que l'on allait appliquer dans notre code. Le modèle de ségragation de Schelling a parru être le meilleur choix, vu que la propagation d'épidémies se base certainement aussi sur le voisinage et les déplacements. Notre problématique à vérifier avec notre modèle est donc la suivante : Les déplacements des individus impactent-ils l'évolution de la propagation d'une épidémie ?
 
 Voici la représentation d'une simulation d'un modèle de Schelling trouvée sur internet en exemple:
 
@@ -189,6 +189,6 @@ Pour finir, voici le rendu final de nos différentes interfaces :
 
 ![](https://www.linkpicture.com/q/2023-04-15-175850.png)
 
-Et pour finir concernant notre hypothèse que nous avans trouvé en quatrième semaine qui était : Les déplacements des individus impactent-ils l'évolution de la propagation d'une épidémie ?
+Et pour finir concernant notre problématique que nous avans trouvé en quatrième semaine qui était : Les déplacements des individus impactent-ils l'évolution de la propagation d'une épidémie ?
 
-En utilisant notre modèle et en faisant varier les différents paramètres de celui-ci, notammant en faisant varier le nombre d'espaces innocupés, le pourcentage de déplacement, et la mise en place ou non d'un confinement et son type, on peut finalement dire que notre réponse à notre hypothèse est positive : globalement plus il y a de déplacements, plus l'épidémie se propage vite et touche parfois plus d'individus.
+En utilisant notre modèle et en faisant varier les différents paramètres de celui-ci, notammant en faisant varier le nombre d'espaces innocupés, le pourcentage de déplacement, et la mise en place ou non d'un confinement et son type, on peut finalement dire que notre réponse à notre problématique est positive : globalement plus il y a de déplacements, plus l'épidémie se propage vite et touche parfois plus d'individus.
