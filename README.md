@@ -27,7 +27,9 @@ D'ailleurs, concernant la forme de notre modèle SEIR. Voici une simple représe
 Pendant la troisième séance nous nous sommes notamment concentrés sur notre carnet de bord, où se trouvent les sources des recherches que l'on a faites, pour le terminer.
 
 ## Quatrième semaine 27/02 --> 05/03
-Pendant la semaine des vacances nous avons discuté sur le modèle que l'on allait appliquer dans notre code. Le modèle de ségragation de Schelling a parru être le meilleur choix, vu que la propagation d'épidémies se base certainement aussi sur le voisinage et les déplacements. Voici une représentation d'une simulation d'un modèle de Schelling trouvée sur internet:
+Pendant la semaine des vacances nous avons discuté sur le modèle que l'on allait appliquer dans notre code. Le modèle de ségragation de Schelling a parru être le meilleur choix, vu que la propagation d'épidémies se base certainement aussi sur le voisinage et les déplacements. Notre hypothèse à vérifier avec notre modèle est donc la suivante : Les déplacements des individus impactent-ils l'évolution de la propagation d'une épidémie ?
+
+Voici la représentation d'une simulation d'un modèle de Schelling trouvée sur internet en exemple:
 
 ![](https://demonstrations.wolfram.com/SchellingsModelOfResidentialSegregation/img/popup_1.png)
 
@@ -155,3 +157,38 @@ Quelques infos sur la légende de la matrice d'infections de l'écran de simulat
 -Un intervalle inclut le nombre supérieur mais pas inférieur.
 
 -Le dernier intervale c'est ]1.25, +infini[.
+
+## Dixième semaine 10/04 --> 16/04
+
+Pas beaucoup de gros changements dans les codes, à part l'ajout de beaucoup de commentaires.
+Concernant l'écran de simulation nous avons rajouté un dernier graphique : les courbes du SEIR obtenues par les équations du début (+ courbe noire de l'évolution de la taille de la population). Nous avons aussi fait en sorte de pouvoir choisir précisémment le nombre d'itérations de simulation, et de pouvoir directement reset à partir de ce même panneau.
+
+Le rendu de l'écran de simulation :
+
+![](https://www.linkpicture.com/q/2023-04-13_1.jpg)
+
+![](https://www.linkpicture.com/q/2023-04-13-2_1.jpg)
+
+## Conclusion
+
+Pour finir, voici le rendu final de nos différentes interfaces :
+
+- L'interface d'accueil:
+
+![](https://www.linkpicture.com/q/2023-04-15-175611.png)
+
+- L'interface d'itération du grand monde (900 individus):
+
+![](https://www.linkpicture.com/q/2023-04-15-180046.png)
+
+- L'interface d'itération du monde moyen (100 individus):
+
+![](https://www.linkpicture.com/q/2023-04-15-175712.png)
+
+- L'interface de simulation (disponible seulement à partir du monde moyen):
+
+![](https://www.linkpicture.com/q/2023-04-15-175850.png)
+
+Et pour finir concernant notre hypothèse que nous avans trouvé en quatrième semaine qui était : Les déplacements des individus impactent-ils l'évolution de la propagation d'une épidémie ?
+
+En utilisant notre modèle et en faisant varier les différents paramètres de celui-ci, notammant en faisant varier le nombre d'espaces innocupés, le pourcentage de déplacement, et la mise en place ou non d'un confinement et son type, on peut finalement dire que notre réponse à notre hypothèse est positive : globalement plus il y a de déplacements, plus l'épidémie se propage vite et touche parfois plus d'individus.
