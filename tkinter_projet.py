@@ -940,6 +940,7 @@ def show_type_graphique(fenetre,world,nb_tours,tab_nb,type_graphique:int,nb_fene
             ax.plot(t, tab_nb[2] , color = 'orange') #I
             ax.plot(t, tab_nb[3] , color = 'pink') #R1
             ax.plot(t, tab_nb[4] , color = 'purple') #R2
+            ax.plot(t, tab_nb[5] , color = 'black') # La population totale
         
             
         ax.set_ylabel("Nombre d'individus",labelpad=-4,fontsize=18)
